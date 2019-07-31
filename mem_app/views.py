@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from .models import Verse, User_verses
-from json import dump
+from json import dumps, loads
 import requests
 
 # Create your views here.
@@ -112,7 +112,12 @@ def search(request, page_number):
 
 def add_verse(request):
     if request.method == "POST":
-        print(request.POST)
-        return HttpResponse(dump({"result": True}))
+        # get JSON sstring, convert to a dict
+        data = loads(request.body)
+
+        # debug prints
+        print(data["ref"])
+        print(data["text"])
+        return HttpResponse(dumps({"result": True}))
     else:
-        return HttpResponse(dump({"result": False}))
+        return HttpResponse(dumps({"result": False}))

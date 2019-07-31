@@ -41,32 +41,39 @@
 <h2>Your Memory Verses</h2>
 <a href="{% url 'logout_view' %}">Logout</a>
 <script>
+    // add event listeners to all the generated buttons
     const btns = document.getElementsByClassName("btnAddVerse")
     for (let i = 0; i < btns.length; i ++){
         btns[i].addEventListener("click", addVerse);
     }
 
+    // send JSON string with verse reference and text to server
     function addVerse(event){
+        // get reference and verse text from DOM
         const verseElement = event.target.previousElementSibling;
         const text = verseElement.innerHTML;
         const ref = verseElement.previousElementSibling.innerHTML;
-        console.log(ref, text);
-        url = "https://127.0.0.1:8000/add-verse";
+
+        //setup url and data for the POST request
+        url = "http://127.0.0.1:8000/add-verse";
         const data = {
             "ref": ref,
             "text": text,
             "csrfmiddlewaretoken": Cookies.get("csrftoken")
         };
-        console.log(data);
+        
+        // send POST request to server
         fetch(url, {
             method: "POST",
             credentials: "include",
             headers: {
                 "X-CSRFToken": Cookies.get("csrftoken"),
                 "Content-type": "application/json",
+                "X-Requested-With": "XMLHttpRequest"
             },
             body: JSON.stringify(data)
         }).then(res => res.json())
+        //print error or success message
         .then(response => console.log('Success:', JSON.stringify(response)))
         .catch(error => console.error('Error:', error));
     }

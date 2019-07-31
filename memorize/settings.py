@@ -121,3 +121,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# security settings
+# SESSION_COOKIE_SECURE = Fa
+# CSRF_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = False
