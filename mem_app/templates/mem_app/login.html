@@ -1,0 +1,17 @@
+{% extends "mem_app/base.html" %}
+{% block title %} Login {% endblock %}
+
+{% block body %}
+<h1>Login</h1>
+{% if message %}
+<span>{{ message }}</span>
+{% endif %}
+<form action="{% url 'login_view' %}" method="POST">
+    {% csrf_token %}
+    <input type="text" name="username" placeholder="Username"><br/>
+    <input type="password" name="password" placeholder="Password" ><br/>
+    <button>Login</button>
+</form>
+<span>No account yet?</span>
+<a href="{% url 'register' %}">Register Here</a>
+{% endblock %}

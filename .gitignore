@@ -1,0 +1,8 @@
+# Don't track the following folders
+.vscode/
+
+# Don't track the following files
+manage.py
+
+
+

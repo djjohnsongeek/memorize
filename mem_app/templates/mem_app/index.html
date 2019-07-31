@@ -1,0 +1,74 @@
+{% extends "mem_app/base.html" %}
+{% block title %} Bible Memorization {% endblock %}
+{% block body %}
+<h1>Welcome {{ user }}</h1>
+<h2>Search the Bible (ESV)</h2>
+<form action="{% url 'search' firstPage %}" method="GET">
+    <input autofocus type="text" name="search_q" placeholder="Keyword or Phrase"/>
+    <button>Search</button>
+</form><br/>
+{% if message %}
+    <span> {{ message }}</span>
+{% endif %}
+<div>
+    {% if currentPage and not message %}
+        {% if currentPage > 1 %}
+            <a href="http://127.0.0.1:8000/search/{{ previousPage }}?search_q={{ search_q }}">Previous</a>
+        {% endif %}
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        {% if nextPage <= totalPages and totalPages > 1 %}
+            <a href="http://127.0.0.1:8000/search/{{ nextPage }}?search_q={{ search_q }}">Next</a>
+        {% endif %}
+    {% endif %}
+    {% for passage in passages %}
+    <div class="passage">
+        <h3>{{ passage.reference }}</h3>
+        <span>{{ passage.content }}</span>
+        <button class="btnAddVerse">Memorize</button>
+    </div>
+    <br/>
+    {% endfor %}
+    {% if currentPage and not message %}
+        {% if currentPage > 1 %}
+            <a href="http://127.0.0.1:8000/search/{{ previousPage }}?search_q={{ search_q }}">Previous</a>
+        {% endif %}
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        {% if nextPage <= totalPages and totalPages > 1 %}
+            <a href="http://127.0.0.1:8000/search/{{ nextPage }}?search_q={{ search_q }}">Next</a>
+        {% endif %}
+    {% endif %}
+</div>
+<h2>Your Memory Verses</h2>
+<a href="{% url 'logout_view' %}">Logout</a>
+<script>
+    const btns = document.getElementsByClassName("btnAddVerse")
+    for (let i = 0; i < btns.length; i ++){
+        btns[i].addEventListener("click", addVerse);
+    }
+
+    function addVerse(event){
+        const verseElement = event.target.previousElementSibling;
+        const text = verseElement.innerHTML;
+        const ref = verseElement.previousElementSibling.innerHTML;
+        console.log(ref, text);
+        url = "https://127.0.0.1:8000/add-verse";
+        const data = {
+            "ref": ref,
+            "text": text,
+            "csrfmiddlewaretoken": Cookies.get("csrftoken")
+        };
+        console.log(data);
+        fetch(url, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "X-CSRFToken": Cookies.get("csrftoken"),
+                "Content-type": "application/json",
+            },
+            body: JSON.stringify(data)
+        }).then(res => res.json())
+        .then(response => console.log('Success:', JSON.stringify(response)))
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+{% endblock %}

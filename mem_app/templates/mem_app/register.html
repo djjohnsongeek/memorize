@@ -1,0 +1,17 @@
+{% extends "mem_app/base.html" %}
+{% block title %} Registration {% endblock %}
+
+{% block body %}
+<h1>Register</h1>
+{% if message %}
+    <span> {{ message }}</span> 
+{% endif %}
+<form action="{% url 'register' %}" method="POST">
+    {% csrf_token %}
+    <input type="email" name="email" placeholder="Email Address"><br/>
+    <input type="text" name="username" placeholder="Username"><br/>
+    <input type="password" name="password" placeholder="Password"><br/>
+    <input type="password" name="confirm_pw" placeholder="Confirm Password"></br>
+    <button>Register</button>
+</form>
+{% endblock %}
