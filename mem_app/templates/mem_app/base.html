@@ -8,17 +8,28 @@
             .passage:hover{
                 background-color: rgb(195, 218, 238);
             }
+            footer div {
+                font-size: 9px;
+                width: 40%;
+                margin: auto;
+                color: grey;
+            }
+            hr {
+                width: 75%;
+            }
         </style>
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     </head>
     <body>
         {% block body %} {% endblock %}
-    </body>
+    </body><br/><br/><hr/>
     <footer>
-        <p>
-            Unless otherwise indicated, all Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), copyright © 2001 by Crossway, 
-            a publishing ministry of Good News Publishers. Used by permission. All rights reserved. You may not copy or download more than 500 consecutive verses of
-            the ESV Bible or more than one half of any book of the ESV Bible.
-        </p>
+        <div>
+            <span>
+                Unless otherwise indicated, all Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), copyright © 2001 by Crossway, 
+                a publishing ministry of Good News Publishers. Used by permission. All rights reserved. You may not copy or download more than 500 consecutive verses of
+                the ESV Bible or more than one half of any book of the ESV Bible.
+            </span>
+        </div>
     </footer>
 </html>

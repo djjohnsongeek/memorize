@@ -1,8 +1,8 @@
 # Don't track the following folders
 .vscode/
+memorize/__pycache__/
+mem_app/__pychache__/
+mem_app/migrations/
 
 # Don't track the following files
 manage.py
-
-
-

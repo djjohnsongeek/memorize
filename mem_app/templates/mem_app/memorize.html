@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>    
+        <title id="ref-title">{{ ref }}</title>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+        <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <style>
+            .verse-to-mem{
+                background-color:burlywood;
+                padding: 25px;
+                width: 40%;
+                margin: auto;
+            }
+
+            footer div {
+                font-size: 9px;
+                width: 40%;
+                margin: auto;
+                color: grey;
+            }
+
+            hr {
+                width: 75%;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app"></div>
+        <script type="text/babel">
+            class Verse extends React.Component {
+                render() {
+                    return(
+                        <div className="verse-to-mem">
+                            <span>{this.props.reference}</span><br/>
+                            <span>{this.props.text}</span>
+                        </div>
+                    )
+                }
+            }
+
+            class App extends React.Component {
+                constructor(props) {
+                    super(props);
+                    this.state = {
+                        ref: document.querySelector("#ref-title").innerHTML,
+                        text: ""
+                    }
+
+                }
+
+                componentDidMount() {
+                    const url = `http://127.0.0.1:8000/verse/${this.state.ref}`;
+
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(response => {
+                            console.log(response.text);
+                            this.setState({
+                                text: response.text
+                            });
+                        })
+                        .catch(error => console.error("Error:", error));
+                }
+
+                render() {
+                    return(
+                        <Verse 
+                            reference={this.state.ref}
+                            text={this.state.text}
+                        />
+                    )
+                }
+            }
+
+            ReactDOM.render(<App/>, document.querySelector("#app"));
+        </script>
+    </body><br/><br/><hr/>
+    <footer>
+        <div>
+            <span>
+                Unless otherwise indicated, all Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), copyright © 2001 by Crossway, 
+                a publishing ministry of Good News Publishers. Used by permission. All rights reserved. You may not copy or download more than 500 consecutive verses of
+                the ESV Bible or more than one half of any book of the ESV Bible.
+            </span>
+        </div>
+    </footer>
+</html>

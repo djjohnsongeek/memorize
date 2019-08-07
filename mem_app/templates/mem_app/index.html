@@ -2,11 +2,13 @@
 {% block title %} Bible Memorization {% endblock %}
 {% block body %}
 <h1>Welcome {{ user }}</h1>
+<a href="{% url 'logout_view' %}">Logout</a>
 <h2>Search the Bible (ESV)</h2>
 <form action="{% url 'search' firstPage %}" method="GET">
-    <input autofocus type="text" name="search_q" placeholder="Keyword or Phrase"/>
+    <input autofocus autocomplete="off" type="text" name="search_q" placeholder="Keyword or Phrase"/>
     <button>Search</button>
 </form><br/>
+
 {% if message %}
     <span> {{ message }}</span>
 {% endif %}
@@ -21,12 +23,12 @@
         {% endif %}
     {% endif %}
     {% for passage in passages %}
-    <div class="passage">
-        <h3>{{ passage.reference }}</h3>
-        <span>{{ passage.content }}</span>
-        <button class="btnAddVerse">Memorize</button>
-    </div>
-    <br/>
+        <div class="passage">
+            <h3>{{ passage.reference }}</h3>
+            <span>{{ passage.content }}</span>
+            <button class="btnAddVerse">Memorize</button>
+        </div>
+        <br/>
     {% endfor %}
     {% if currentPage and not message %}
         {% if currentPage > 1 %}
@@ -38,8 +40,16 @@
         {% endif %}
     {% endif %}
 </div>
-<h2>Your Memory Verses</h2>
-<a href="{% url 'logout_view' %}">Logout</a>
+{% if verses %}
+    <h2>Your Memory Verses</h2>
+    <ul>
+        {% for verse in verses %}
+        <li>
+            <a href="http://127.0.0.1:8000/memorize/{{ verse }}">{{ verse }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+{% endif %}
 <script>
     // add event listeners to all the generated buttons
     const btns = document.getElementsByClassName("btnAddVerse")
@@ -73,8 +83,10 @@
             },
             body: JSON.stringify(data)
         }).then(res => res.json())
-        //print error or success message
-        .then(response => console.log('Success:', JSON.stringify(response)))
+        //upon successful response: redirect
+        .then(response => {
+            window.location.href=`http://127.0.0.1:8000/memorize/${response.ref}`;
+        })
         .catch(error => console.error('Error:', error));
     }
 </script>
