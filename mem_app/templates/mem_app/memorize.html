@@ -14,6 +14,15 @@
                 margin: auto;
             }
 
+            .btnVerseControls{
+                width: 110px;
+                height: 50px;
+            }
+
+            .divVerseControls{
+                text-align: center;
+            }
+
             footer div {
                 font-size: 9px;
                 width: 40%;
@@ -32,11 +41,22 @@
             class Verse extends React.Component {
                 render() {
                     return(
-                        <div className="verse-to-mem">
-                            <span>{this.props.reference}</span><br/>
-                            <span>{this.props.text}</span>
+                        <div>
+                            <div className="verse-to-mem">
+                                <span>{this.props.reference}</span><br/>
+                                <span>{this.props.text}</span>
+                            </div>
+                            <div className="divVerseControls">
+                                <br/>
+                                <button onClick={this.instructions} className="btnVerseControls">Instructions</button>
+                                <button onClick={this.props.removeWords} className="btnVerseControls" id="btnRemoveWords">Remove Words</button>
+                            </div>
                         </div>
                     )
+                }
+
+                instructions = () => {
+                    alert("Say the verse outloud, or write it down. Then click the 'Remove Words' Button to slowly remove words from the verse. Repeat the process until you can say the verse while there are no words showing.");
                 }
             }
 
@@ -56,7 +76,6 @@
                     fetch(url)
                         .then(res => res.json())
                         .then(response => {
-                            console.log(response.text);
                             this.setState({
                                 text: response.text
                             });
@@ -64,11 +83,60 @@
                         .catch(error => console.error("Error:", error));
                 }
 
+                randomInt(min, max) {
+                    // return and random integer that is equal to min, or just under max
+                    // function from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+                    return Math.floor(Math.random() * (max - min) + min);
+                }
+
+                removeWords = () => {
+                    // blank out reference if all words are already blank
+                    if(this.state.text.search(/[^_ ]/) === -1){
+                        document.querySelector("#btnRemoveWords").disabled = true;
+                        this.setState({
+                            ref: "_____________"
+                        });
+                        return;
+                    }
+                    const verseWords = this.state.text.split(" ");
+                    const numOfWords = this.randomInt(1, 5);
+
+                    // remove random number of words (between 1, 5)
+                    for(let i = 0; i < numOfWords; i++){
+                        const index = this.randomInt(0, verseWords.length);
+                        let blank = "";
+
+                        // build a "blank" string same length as the word
+                        for (let j = 0; j < verseWords[index].length; j++){
+                            blank += "_";
+                        }
+
+                        // skip iteration if chosen work is already blank
+                        if (verseWords[index].includes("_")) {
+                            i--;
+                            continue;
+                        }
+
+                        // replace word
+                        verseWords[index] = blank;
+
+                        // end loop if all words are blank
+                        if(verseWords.join("").search(/[^_]/) === -1){
+                            break;
+                        }
+                    }
+                    // update state
+                    this.setState({
+                        text: verseWords.join(" ")
+                    })
+                }
+
                 render() {
                     return(
                         <Verse 
                             reference={this.state.ref}
                             text={this.state.text}
+                            removeWords={this.removeWords}
                         />
                     )
                 }
