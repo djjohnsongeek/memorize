@@ -19,6 +19,18 @@
                 height: 50px;
             }
 
+            #btnInstructions{
+                border: 0px solid white;
+                background-color: white;
+                cursor: pointer;
+                color:rgb(49, 74, 119);
+                font-size: 16px;
+            }
+
+            #btnInstructions:hover{
+                color:cornflowerblue;
+            }
+
             .divVerseControls{
                 text-align: center;
             }
@@ -48,15 +60,16 @@
                             </div>
                             <div className="divVerseControls">
                                 <br/>
-                                <button onClick={this.instructions} className="btnVerseControls">Instructions</button>
-                                <button onClick={this.props.removeWords} className="btnVerseControls" id="btnRemoveWords">Remove Words</button>
+                                <button onClick={this.props.replaceWords} className="btnVerseControls">Replace Words</button>
+                                <button onClick={this.props.removeWords} className="btnVerseControls" id="btnRemoveWords">Remove Words</button><br/>
+                                <button onClick={this.instructions} id="btnInstructions">Instructions</button>
                             </div>
                         </div>
                     )
                 }
 
                 instructions = () => {
-                    alert("Say the verse outloud, or write it down. Then click the 'Remove Words' Button to slowly remove words from the verse. Repeat the process until you can say the verse while there are no words showing.");
+                    alert("Say the verse outloud, or write it down. Then click the 'Remove Words' Button to remove a random number of words. Repeat the process until you can say the entire verse with no words showing.");
                 }
             }
 
@@ -65,7 +78,8 @@
                     super(props);
                     this.state = {
                         ref: document.querySelector("#ref-title").innerHTML,
-                        text: ""
+                        text: "",
+                        past_text: "",
                     }
 
                 }
@@ -77,7 +91,8 @@
                         .then(res => res.json())
                         .then(response => {
                             this.setState({
-                                text: response.text
+                                text: response.text,
+                                //past_text: response.text
                             });
                         })
                         .catch(error => console.error("Error:", error));
@@ -98,6 +113,8 @@
                         });
                         return;
                     }
+
+                    const past_text = this.state.text;
                     const verseWords = this.state.text.split(" ");
                     const numOfWords = this.randomInt(1, 5);
 
@@ -127,8 +144,20 @@
                     }
                     // update state
                     this.setState({
-                        text: verseWords.join(" ")
+                        text: verseWords.join(" "),
+                        past_text: past_text
                     })
+                    console.log(this.state.text);
+                    console.log(this.state.past_text);
+                }
+
+                replaceWords = () => {
+                    if(this.state.past_text === ""){
+                        return
+                    }
+                    this.setState({
+                        text: this.state.past_text
+                    });
                 }
 
                 render() {
@@ -137,6 +166,7 @@
                             reference={this.state.ref}
                             text={this.state.text}
                             removeWords={this.removeWords}
+                            replaceWords={this.replaceWords}
                         />
                     )
                 }
