@@ -155,9 +155,22 @@ def memorize(request, reference):
     return render(request, "mem_app/memorize.html", context)
 
 def verse(request, reference):
-    text = Verse.objects.get(reference=reference)
+    user_refs = []
     verse_data = {
         "ref": reference,
-        "text": text.text,
     }
+
+    # get user's verses
+    verses = User_verses.objects.filter(user_id=request.user.id)
+
+    for verse in verses:
+        user_refs.append(verse.verse_id.reference)
+
+    # check if reference apperas in user's verses, if so send data
+    if reference in user_refs:
+        verse_obj = Verse.objects.get(reference=reference)
+        verse_data["text"] = verse_obj.text
+    else:
+        verse_data["text"] = None
+
     return HttpResponse(dumps(verse_data))
