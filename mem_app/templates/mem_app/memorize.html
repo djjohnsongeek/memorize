@@ -8,12 +8,22 @@
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
         <style>
             .verse-to-mem{
-                background-color:burlywood;
+                font-family: Verdana, sans-serif;
+                font-size: 26px;
+                background-color:#87bbde;
                 padding: 25px;
                 width: 40%;
                 margin: auto;
+                border-radius: 3px;
             }
 
+            #spanText{
+                font-size: 20px;
+            }
+
+            #spanRef {
+                font-weight: bold;
+            }
             .btnVerseControls{
                 width: 110px;
                 height: 50px;
@@ -55,12 +65,12 @@
                     return(
                         <div>
                             <div className="verse-to-mem">
-                                <span>{this.props.reference}</span><br/>
-                                <span>{this.props.text}</span>
+                                <span id="spanRef">{this.props.reference}</span><br/>
+                                <span id="spanText">{this.props.text}</span>
                             </div>
                             <div className="divVerseControls">
                                 <br/>
-                                <button onClick={this.props.replaceWords} className="btnVerseControls">Replace Words</button>
+                                <button onClick={this.props.restoreWords} className="btnVerseControls" id="btnRestoreWords">Restore Words</button>
                                 <button onClick={this.props.removeWords} className="btnVerseControls" id="btnRemoveWords">Remove Words</button><br/>
                                 <button onClick={this.instructions} id="btnInstructions">Instructions</button>
                             </div>
@@ -69,7 +79,11 @@
                 }
 
                 instructions = () => {
-                    alert("Say the verse outloud, or write it down. Then click the 'Remove Words' Button to remove a random number of words. Repeat the process until you can say the entire verse with no words showing.");
+                    alert("Say the verse outloud, or write it down" +
+                        "Then click the 'Remove Words' Button to r" +
+                        "emove a random number of words. Repeat th" +
+                        "e process until you can say the entire ve" +
+                        "rse with no words showing.");
                 }
             }
 
@@ -79,9 +93,9 @@
                     this.state = {
                         ref: document.querySelector("#ref-title").innerHTML,
                         text: "",
-                        past_text: "",
+                        cachedText: [],
+                        cacheIndex: 0
                     }
-
                 }
 
                 componentDidMount() {
@@ -90,12 +104,37 @@
                     fetch(url)
                         .then(res => res.json())
                         .then(response => {
-                            this.setState({
-                                text: response.text,
-                                //past_text: response.text
-                            });
+                            // check if server could not find user's verse
+                            if (response.text === null) {
+                                this.setState(state => ({
+                                    text: "No such verse associated with your Account.",
+                                    cachedText: [...state.cachedText, "No such verse associated with your account."]
+                                }));
+                                document.querySelector("#btnRemoveWords").disabled = true;
+                            }
+                            // update sate to match user's verse
+                            else {
+                                this.setState(state => ({
+                                    text: response.text,
+                                    cachedText: [...state.cachedText, response.text]
+                                }));
+                            }
                         })
-                        .catch(error => console.error("Error:", error));
+                        .catch(error => {
+                            // update state to display error
+                            this.setState(state => ({
+                                ref: "Sorry:",
+                                text: "An Error Occured",
+                                cachedText: [...state.cachedText, "An Error Occured."]
+                            }));
+                            document.querySelector("#btnRemoveWords").disabled = true;
+                            console.error("Error:", error);
+                        });
+                    
+                    // disable restore button since no has been removed yet
+                    if (this.state.cacheIndex === 0){
+                        document.querySelector("#btnRestoreWords").disabled = true;
+                    }
                 }
 
                 randomInt(min, max) {
@@ -105,58 +144,76 @@
                 }
 
                 removeWords = () => {
-                    // blank out reference if all words are already blank
-                    if(this.state.text.search(/[^_ ]/) === -1){
+                    // enable restore if necessary
+                    if (document.querySelector("#btnRestoreWords").disabled){
+                        document.querySelector("#btnRestoreWords").disabled = false;
+                    }
+
+                    // blank out reference if all words are already blank, disable button
+                    if (this.state.text.search(/[^_ ]/) === -1){
                         document.querySelector("#btnRemoveWords").disabled = true;
                         this.setState({
                             ref: "_____________"
                         });
                         return;
                     }
-
-                    const past_text = this.state.text;
-                    const verseWords = this.state.text.split(" ");
+                    const currText = this.state.text.split(" ");
                     const numOfWords = this.randomInt(1, 5);
 
                     // remove random number of words (between 1, 5)
                     for(let i = 0; i < numOfWords; i++){
-                        const index = this.randomInt(0, verseWords.length);
+                        const index = this.randomInt(0, currText.length);
                         let blank = "";
 
                         // build a "blank" string same length as the word
-                        for (let j = 0; j < verseWords[index].length; j++){
+                        for (let j = 0; j < currText[index].length; j++){
                             blank += "_";
                         }
 
                         // skip iteration if chosen work is already blank
-                        if (verseWords[index].includes("_")) {
+                        if (currText[index].includes("_")) {
                             i--;
                             continue;
                         }
 
-                        // replace word
-                        verseWords[index] = blank;
+                        // restore word
+                        currText[index] = blank;
 
                         // end loop if all words are blank
-                        if(verseWords.join("").search(/[^_]/) === -1){
+                        if(currText.join("").search(/[^_]/) === -1){
                             break;
                         }
                     }
                     // update state
-                    this.setState({
-                        text: verseWords.join(" "),
-                        past_text: past_text
-                    })
-                    console.log(this.state.text);
-                    console.log(this.state.past_text);
+                    this.setState(state => ({
+                        text: currText.join(" "),
+                        cachedText: [...state.cachedText, currText.join(" ")],
+                        cacheIndex: state.cachedText.length
+                    }));
                 }
 
-                replaceWords = () => {
-                    if(this.state.past_text === ""){
-                        return
+                restoreWords = () => {
+                    // enable remove if necessary
+                    if (document.querySelector("#btnRemoveWords").disabled){
+                        document.querySelector("#btnRemoveWords").disabled = false;
+                    }   
+
+                    // check if cache is empty
+                    if (this.state.cacheIndex === 0){
+                        this.setState({
+                            ref: document.querySelector("#ref-title").innerHTML,
+                        })
+                        document.querySelector("#btnRestoreWords").disabled = true;
+                        return;
                     }
+
+                    // remove last cached step, update text to previous cached step
+                    const cache = this.state.cachedText;
+                    cache.pop();
                     this.setState({
-                        text: this.state.past_text
+                        text: this.state.cachedText[this.state.cacheIndex - 1],
+                        cachedText: cache,
+                        cacheIndex: this.state.cacheIndex - 1
                     });
                 }
 
@@ -166,7 +223,7 @@
                             reference={this.state.ref}
                             text={this.state.text}
                             removeWords={this.removeWords}
-                            replaceWords={this.replaceWords}
+                            restoreWords={this.restoreWords}
                         />
                     )
                 }
