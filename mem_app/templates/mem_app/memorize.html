@@ -8,7 +8,7 @@
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
         <style>
             .verse-to-mem{
-                font-family: Verdana, sans-serif;
+                font-family:'Courier New', Courier, monospace;
                 font-size: 26px;
                 background-color:#87bbde;
                 padding: 25px;
@@ -55,6 +55,47 @@
             hr {
                 width: 75%;
             }
+
+            .modal{
+                z-index: 1;
+                display: none;
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgb(0,0,0);
+                background-color: rgba(0,0,0,0.4);
+            }
+
+            .modal-content {
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
+                background-color: #fefefe;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 40%;
+
+            }
+
+            #close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            #close:hover, #close:focus {
+                color: rgb(228, 13, 13);
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .txt-emphasis{
+                font-weight: bold;
+                color: rgb(67, 67, 175);
+            }
         </style>
     </head>
     <body>
@@ -73,17 +114,38 @@
                                 <button onClick={this.props.restoreWords} className="btnVerseControls" id="btnRestoreWords">Restore Words</button>
                                 <button onClick={this.props.removeWords} className="btnVerseControls" id="btnRemoveWords">Remove Words</button><br/>
                                 <button onClick={this.instructions} id="btnInstructions">Instructions</button>
+                                <div id="modal-instructions" className="modal">
+                                    <div className="modal-content">
+                                        <span id="close">&times;</span>
+                                        <p>
+                                         Say the verse outloud, or write it down. Then click the <span className="txt-emphasis">Remove Words</span> Button to remove
+                                         a random number of words. If you need to go back, click the <span className="txt-emphasis">Restore Words</span> button.
+                                         Repeat the process until you can say or write the entire verse with no words showing.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )
                 }
 
                 instructions = () => {
-                    alert("Say the verse outloud, or write it down" +
-                        "Then click the 'Remove Words' Button to r" +
-                        "emove a random number of words. Repeat th" +
-                        "e process until you can say the entire ve" +
-                        "rse with no words showing.");
+                    // get modal and close button
+                    const modal = document.querySelector("#modal-instructions");
+                    const btnClose = document.querySelector("#close");
+
+                    // display modal
+                    modal.style.display = "block";
+
+                    // close modal
+                    btnClose.onclick = () => {
+                        modal.style.display = "none";
+                    }
+                    window.onclick = (event) => {
+                        if (event.target == modal){
+                            modal.style.display = "none";
+                        }
+                    };
                 }
             }
 
