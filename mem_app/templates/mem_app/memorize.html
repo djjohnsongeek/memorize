@@ -6,101 +6,13 @@
         <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-        <style>
-            .verse-to-mem{
-                font-family:'Courier New', Courier, monospace;
-                font-size: 26px;
-                background-color:#87bbde;
-                padding: 25px;
-                width: 40%;
-                margin: auto;
-                border-radius: 3px;
-            }
-
-            #spanText{
-                font-size: 20px;
-            }
-
-            #spanRef {
-                font-weight: bold;
-            }
-            .btnVerseControls{
-                width: 110px;
-                height: 50px;
-            }
-
-            #btnInstructions{
-                border: 0px solid white;
-                background-color: white;
-                cursor: pointer;
-                color:rgb(49, 74, 119);
-                font-size: 16px;
-            }
-
-            #btnInstructions:hover{
-                color:cornflowerblue;
-            }
-
-            .divVerseControls{
-                text-align: center;
-            }
-
-            footer div {
-                font-size: 9px;
-                width: 40%;
-                margin: auto;
-                color: grey;
-            }
-
-            hr {
-                width: 75%;
-            }
-
-            .modal{
-                z-index: 1;
-                display: none;
-                position: fixed;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgb(0,0,0);
-                background-color: rgba(0,0,0,0.4);
-            }
-
-            .modal-content {
-                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
-                background-color: #fefefe;
-                margin: 15% auto;
-                padding: 20px;
-                border: 1px solid #888;
-                width: 40%;
-
-            }
-
-            #close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
-                font-weight: bold;
-            }
-
-            #close:hover, #close:focus {
-                color: rgb(228, 13, 13);
-                text-decoration: none;
-                cursor: pointer;
-            }
-
-            .txt-emphasis{
-                font-weight: bold;
-                color: rgb(67, 67, 175);
-            }
-        </style>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'mem_app/styles.css' %}">
     </head>
     <body>
         <div id="app"></div>
         <script type="text/babel">
+            "use strict"
             class Verse extends React.Component {
                 render() {
                     return(
@@ -113,13 +25,14 @@
                                 <br/>
                                 <button onClick={this.props.restoreWords} className="btnVerseControls" id="btnRestoreWords">Restore Words</button>
                                 <button onClick={this.props.removeWords} className="btnVerseControls" id="btnRemoveWords">Remove Words</button><br/>
-                                <button onClick={this.instructions} id="btnInstructions">Instructions</button>
+                                <button onClick={this.instructions} id="btn-instructions">Instructions</button>
+                                <button onClick={this.props.changeMode} id="btn-grade-mode">Attempt</button>
                                 <div id="modal-instructions" className="modal">
                                     <div className="modal-content">
                                         <span id="close">&times;</span>
                                         <p>
-                                         Say the verse outloud, or write it down. Then click the <span className="txt-emphasis">Remove Words</span> Button to remove
-                                         a random number of words. If you need to go back, click the <span className="txt-emphasis">Restore Words</span> button.
+                                         Say the verse outloud, or write it down. Then click the <span className="txt-emphasis-blue">Remove Words</span> Button to remove
+                                         a random number of words. If you need to go back, click the <span className="txt-emphasis-green">Restore Words</span> button.
                                          Repeat the process until you can say or write the entire verse with no words showing.
                                         </p>
                                     </div>
@@ -149,6 +62,142 @@
                 }
             }
 
+            class Grade extends React.Component {
+                constructor(props) {
+                    super(props);
+                    this.state = {
+                        grade: 0,
+                        feedback: "",
+                    }
+                }
+
+                render() {
+                    return(
+                        <div className="div-main">
+                            <h3>Verse Grading</h3>
+                            <textarea id="textarea-verse" rows="8" cols="90" autoFocus placeholder="Verse Reference&#13;&#10;Verse Body..."></textarea><br/>
+                            <button onClick={this.gradeVerse} className="btnVerseControls">Submit</button><br/>
+                            <button onClick={this.props.changeMode} id="btn-study-mode">Study Verse</button>
+                            <div id="modal-feedback" className="modal">
+                                <div className="modal-content">
+                                    <span id="close-feedback">&times;</span>
+                                    <h3 id="percent">Your Score: {this.state.grade}</h3>
+                                    <p id="feedback">{this.state.feedback}</p>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }
+
+                gradeVerse = () => {
+                    const regex = /[^A-za-z0-9 \t]/gi;
+                    const regex2 = /[\r\n]/gi;
+
+                    // remove non-alphabetic characters, convert verse to list of words
+                    const verseText = this.props.text.replace(regex, "").split(" ");
+
+                    //add reference to begining of verseText array
+                    const ref = this.props.reference.replace(regex, "").split(" ");
+                    verseText.unshift(ref[0], ref[1]);
+
+                    //convert user's attempt to list of words
+                    const rawText = document.getElementById("textarea-verse").value.replace(regex2, " ");
+                    const verseAttempt = rawText.replace(regex, "").split(" ");
+                    const verseRaw = verseAttempt.slice(0);
+                    
+
+                    // prepare error and score storage
+                    let score = 0;
+                    const errorsIndex = [];
+
+                    // compare verses
+                    for (let i = 0; i < verseAttempt.length; i++) {
+                        // bool dictates if an extra word should be added back in to the array
+                        // when displaying the graded verse to the user
+                        let bool = false;
+
+                        // increase score if words match
+                        if (verseAttempt[i] === verseText[i]) {
+                            score += 1;
+                        }
+
+                        // decrease score, store error info there are
+                        // extra words at the end of user's input
+                        else if(verseText[i] === undefined){
+                            score -= 1;
+                            errorsIndex.push([i, bool]);
+                        }
+
+                        else {
+                            // prepare error text
+                            let errorText = verseAttempt[i];
+
+                            // decrease score if words do not match
+                            score -= 1;
+
+                            // if error seems like an extra word
+                            if (verseAttempt[i + 1] === verseText[i]) {
+                                bool = true;
+                                errorText = verseAttempt[i];
+                                verseAttempt.splice(i, 1);
+                            }
+                            // if error seems like a missing word
+                            else if (verseAttempt[i] === verseText[i + 1]) {
+                                verseAttempt.splice(i, 0, "____");
+                            }
+                            else{}
+                            // record error
+                            errorsIndex.push([i, bool, errorText]);
+                        }
+                    }
+                    // sort errors, smaller index's first
+                    errorsIndex.sort((a, b) => a[0] - b[0]);
+                    let percent = Math.round(score / verseText.length * 100);
+                    
+                    let index = 0;
+                    for (let j = 0; j < verseAttempt.length; j++) {
+                        console.log(index);
+                        if (errorsIndex[index] === undefined){
+                            break;
+                        }
+                        if (j === errorsIndex[index][0]) {
+                            // insert previously removed work back into users's attempt for feedback
+                            if (errorsIndex[index][1]) {
+                                verseAttempt.splice(j, 0, errorsIndex[index][2]);
+                            }
+                            verseAttempt[j] = "<span class='text-error'>" + verseAttempt[j] + "</span>";
+                            index++;
+                        }
+                    }
+
+                    // update feedback modal
+                    this.setState({
+                        grade: percent.toString() + "%",
+                    });
+                    document.querySelector("#feedback").innerHTML = verseAttempt.join(" ");
+
+                    console.log(verseAttempt.join(" "));
+                    console.log(JSON.stringify(verseAttempt));
+
+                    // get modal and close button
+                    const modal = document.querySelector("#modal-feedback");
+                    const btnClose = document.querySelector("#close-feedback");
+
+                    // display modal
+                    modal.style.display = "block";
+
+                    // close modal
+                    btnClose.onclick = () => {
+                        modal.style.display = "none";
+                    }
+                    window.onclick = (event) => {
+                        if (event.target == modal){
+                            modal.style.display = "none";
+                        }
+                    };
+                }
+            }
+
             class App extends React.Component {
                 constructor(props) {
                     super(props);
@@ -156,7 +205,8 @@
                         ref: document.querySelector("#ref-title").innerHTML,
                         text: "",
                         cachedText: [],
-                        cacheIndex: 0
+                        cacheIndex: 0,
+                        gradeMode: false
                     }
                 }
 
@@ -174,7 +224,7 @@
                                 }));
                                 document.querySelector("#btnRemoveWords").disabled = true;
                             }
-                            // update sate to match user's verse
+                            // update state to match user's verse
                             else {
                                 this.setState(state => ({
                                     text: response.text,
@@ -279,15 +329,33 @@
                     });
                 }
 
+                changeMode = () => {
+                    this.setState({
+                        gradeMode: !this.state.gradeMode
+                    });
+                }
+
                 render() {
-                    return(
-                        <Verse 
-                            reference={this.state.ref}
-                            text={this.state.text}
-                            removeWords={this.removeWords}
-                            restoreWords={this.restoreWords}
-                        />
-                    )
+                    if (this.state.gradeMode) {
+                        return(
+                            <Grade
+                                changeMode={this.changeMode}
+                                text={this.state.cachedText[0]}
+                                reference={this.state.ref}
+                            />
+                        )
+                    }
+                    else {
+                        return(
+                            <Verse 
+                                reference={this.state.ref}
+                                text={this.state.text}
+                                removeWords={this.removeWords}
+                                restoreWords={this.restoreWords}
+                                changeMode={this.changeMode}
+                            />
+                        )
+                    }
                 }
             }
 

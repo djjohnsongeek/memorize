@@ -4,20 +4,8 @@
         <title>
             {% block title %} {% endblock %}
         </title>
-        <style>
-            .passage:hover{
-                background-color: rgb(195, 218, 238);
-            }
-            footer div {
-                font-size: 9px;
-                width: 40%;
-                margin: auto;
-                color: grey;
-            }
-            hr {
-                width: 75%;
-            }
-        </style>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'mem_app/styles.css' %}">
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     </head>
     <body>

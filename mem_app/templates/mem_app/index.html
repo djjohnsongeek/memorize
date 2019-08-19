@@ -1,55 +1,59 @@
 {% extends "mem_app/base.html" %}
 {% block title %} Bible Memorization {% endblock %}
 {% block body %}
-<h1>Welcome {{ user }}</h1>
-<a href="{% url 'logout_view' %}">Logout</a>
-<h2>Search the Bible (ESV)</h2>
-<form action="{% url 'search' firstPage %}" method="GET">
-    <input autofocus autocomplete="off" type="text" name="search_q" placeholder="Keyword or Phrase"/>
-    <button>Search</button>
-</form><br/>
+<div class="div-main">
+    <h1>Welcome {{ user }}</h1>
+    <a href="{% url 'logout_view' %}">Logout</a>
+    <h2>Search the Bible (ESV)</h2>
+    <form action="{% url 'search' firstPage %}" method="GET">
+        <input autofocus autocomplete="off" type="text" name="search_q" placeholder="Keyword or Phrase"/>
+        <button>Search</button>
+    </form><br/>
 
-{% if message %}
-    <span> {{ message }}</span>
-{% endif %}
-<div>
-    {% if currentPage and not message %}
-        {% if currentPage > 1 %}
-            <a href="http://127.0.0.1:8000/search/{{ previousPage }}?search_q={{ search_q }}">Previous</a>
-        {% endif %}
-        <span>Page {{ currentPage }} of {{ totalPages }}</span>
-        {% if nextPage <= totalPages and totalPages > 1 %}
-            <a href="http://127.0.0.1:8000/search/{{ nextPage }}?search_q={{ search_q }}">Next</a>
-        {% endif %}
+    {% if message %}
+        <span> {{ message }}</span>
     {% endif %}
-    {% for passage in passages %}
-        <div class="passage">
-            <h3>{{ passage.reference }}</h3>
-            <span>{{ passage.content }}</span>
-            <button class="btnAddVerse">Memorize</button>
-        </div>
-        <br/>
-    {% endfor %}
-    {% if currentPage and not message %}
-        {% if currentPage > 1 %}
-            <a href="http://127.0.0.1:8000/search/{{ previousPage }}?search_q={{ search_q }}">Previous</a>
+    <div>
+        {% if currentPage and not message %}
+            {% if currentPage > 1 %}
+                <a href="http://127.0.0.1:8000/search/{{ previousPage }}?search_q={{ search_q }}">Prev.</a>
+            {% endif %}
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            {% if nextPage <= totalPages and totalPages > 1 %}
+                <a href="http://127.0.0.1:8000/search/{{ nextPage }}?search_q={{ search_q }}">Next</a>
+            {% endif %}
         {% endif %}
-        <span>Page {{ currentPage }} of {{ totalPages }}</span>
-        {% if nextPage <= totalPages and totalPages > 1 %}
-            <a href="http://127.0.0.1:8000/search/{{ nextPage }}?search_q={{ search_q }}">Next</a>
+        <p></p>
+        {% for passage in passages %}
+            <div class="passage">
+                <span class="ref">{{ passage.reference }}</span><br/>
+                <span>{{ passage.content }}</span><br/>
+                <button class="btnAddVerse">Memorize</button>
+            </div>
+            <br/>
+        {% endfor %}
+        {% if currentPage and not message %}
+            {% if currentPage > 1 %}
+                <a href="http://127.0.0.1:8000/search/{{ previousPage }}?search_q={{ search_q }}">Prev.</a>
+            {% endif %}
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            {% if nextPage <= totalPages and totalPages > 1 %}
+                <a href="http://127.0.0.1:8000/search/{{ nextPage }}?search_q={{ search_q }}">Next</a>
+            {% endif %}
         {% endif %}
-    {% endif %}
-</div>
-{% if verses %}
+    </div>
+    {% if verses %}
     <h2>Your Memory Verses</h2>
-    <ul>
+    <ul class="verse-list">
         {% for verse in verses %}
         <li>
             <a href="http://127.0.0.1:8000/memorize/{{ verse }}">{{ verse }}</a>
         </li>
         {% endfor %}
     </ul>
-{% endif %}
+    {% endif %}
+</div>
+
 <script>
     // add event listeners to all the generated buttons
     const btns = document.getElementsByClassName("btnAddVerse")
@@ -60,9 +64,9 @@
     // send JSON string with verse reference and text to server
     function addVerse(event){
         // get reference and verse text from DOM
-        const verseElement = event.target.previousElementSibling;
+        const verseElement = event.target.previousElementSibling.previousElementSibling;
         const text = verseElement.innerHTML;
-        const ref = verseElement.previousElementSibling.innerHTML;
+        const ref = verseElement.previousElementSibling.previousElementSibling.innerHTML;
 
         // setup url and data for the POST request
         url = "http://127.0.0.1:8000/add-verse";
