@@ -1,59 +1,63 @@
 {% extends "mem_app/base.html" %}
 {% block title %} Bible Memorization {% endblock %}
 {% block body %}
-<div class="div-main">
-    <h1>Welcome {{ user }}</h1>
-    <a href="{% url 'logout_view' %}">Logout</a>
-    <h2>Search the Bible (ESV)</h2>
-    <form action="{% url 'search' firstPage %}" method="GET">
-        <input autofocus autocomplete="off" type="text" name="search_q" placeholder="Keyword or Phrase"/>
-        <button>Search</button>
-    </form><br/>
-
-    {% if message %}
-        <span> {{ message }}</span>
-    {% endif %}
-    <div>
-        {% if currentPage and not message %}
-            {% if currentPage > 1 %}
-                <a href="http://127.0.0.1:8000/search/{{ previousPage }}?search_q={{ search_q }}">Prev.</a>
-            {% endif %}
-            <span>Page {{ currentPage }} of {{ totalPages }}</span>
-            {% if nextPage <= totalPages and totalPages > 1 %}
-                <a href="http://127.0.0.1:8000/search/{{ nextPage }}?search_q={{ search_q }}">Next</a>
-            {% endif %}
+<div class="div-main">  
+    <aside>
+        <h2>User: {{ user }}</h2>
+        <a href="{% url 'index' %}">Home</a><br/>
+        <a href="{% url 'logout_view' %}">Logout</a>
+        {% if verses %}
+            <h2>Your Verses</h2>
+            <ul class="verse-list">
+                {% for verse in verses %}
+                    <li>
+                        <a href="http://127.0.0.1:8000/memorize/{{ verse }}">{{ verse }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
         {% endif %}
-        <p></p>
-        {% for passage in passages %}
-            <div class="passage">
-                <span class="ref">{{ passage.reference }}</span><br/>
-                <span>{{ passage.content }}</span><br/>
-                <button class="btnAddVerse">Memorize</button>
-            </div>
-            <br/>
-        {% endfor %}
-        {% if currentPage and not message %}
-            {% if currentPage > 1 %}
-                <a href="http://127.0.0.1:8000/search/{{ previousPage }}?search_q={{ search_q }}">Prev.</a>
-            {% endif %}
-            <span>Page {{ currentPage }} of {{ totalPages }}</span>
-            {% if nextPage <= totalPages and totalPages > 1 %}
-                <a href="http://127.0.0.1:8000/search/{{ nextPage }}?search_q={{ search_q }}">Next</a>
-            {% endif %}
+    </aside>
+    <section>
+        <h1>Search the Bible (ESV)</h1>
+        <form action="{% url 'search' firstPage %}" method="GET">
+            <input autofocus autocomplete="off" type="text" name="search_q" placeholder="Keyword or reference"/>
+            <button>Search</button>
+        </form><br/>
+        {% if message %}
+            <span> {{ message }}</span>
         {% endif %}
-    </div>
-    {% if verses %}
-    <h2>Your Memory Verses</h2>
-    <ul class="verse-list">
-        {% for verse in verses %}
-        <li>
-            <a href="http://127.0.0.1:8000/memorize/{{ verse }}">{{ verse }}</a>
-        </li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+        <div>
+            {% if currentPage and not message %}
+                {% if currentPage > 1 %}
+                    <a href="http://127.0.0.1:8000/search/{{ previousPage }}?search_q={{ search_q }}">Prev.</a>
+                {% endif %}
+                <span class="page-nav-text">Page {{ currentPage }} of {{ totalPages }}</span>
+                {% if nextPage <= totalPages and totalPages > 1 %}
+                    <a href="http://127.0.0.1:8000/search/{{ nextPage }}?search_q={{ search_q }}">Next</a>
+                {% endif %}
+            {% endif %}
+            <p></p>
+            {% for passage in passages %}
+                <div class="passage">
+                    <span class="ref">{{ passage.reference }}</span><br/>
+                    <span>{{ passage.content }}</span><br/>
+                    <button class="btnAddVerse">Memorize</button>
+                </div>
+                <br/>
+            {% endfor %}
+            {% if currentPage and not message %}
+                {% if currentPage > 1 %}
+                    <a href="http://127.0.0.1:8000/search/{{ previousPage }}?search_q={{ search_q }}">Prev.</a>
+                {% endif %}
+                <span class="page-nav-text">Page {{ currentPage }} of {{ totalPages }}</span>
+                {% if nextPage <= totalPages and totalPages > 1 %}
+                    <a href="http://127.0.0.1:8000/search/{{ nextPage }}?search_q={{ search_q }}">Next</a>
+                {% endif %}
+            {% endif %}
+            <div class="spacer"></div>
+        </div>
+    </section>
 </div>
-
 <script>
     // add event listeners to all the generated buttons
     const btns = document.getElementsByClassName("btnAddVerse")

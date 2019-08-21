@@ -8,6 +8,7 @@
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
         {% load static %}
         <link rel="stylesheet" type="text/css" href="{% static 'mem_app/styles.css' %}">
+        <link href="https://fonts.googleapis.com/css?family=Cousine|Lato|Montserrat&display=swap" rel="stylesheet"> 
     </head>
     <body>
         <div id="app"></div>
@@ -17,6 +18,7 @@
                 render() {
                     return(
                         <div>
+                            <h3>Current Score: {this.props.score}%</h3>
                             <div className="verse-to-mem">
                                 <span id="spanRef">{this.props.reference}</span><br/>
                                 <span id="spanText">{this.props.text}</span>
@@ -105,7 +107,6 @@
                     const verseAttempt = rawText.replace(regex, "").split(" ");
                     const verseRaw = verseAttempt.slice(0);
                     
-
                     // prepare error and score storage
                     let score = 0;
                     const errorsIndex = [];
@@ -161,7 +162,7 @@
                             break;
                         }
                         if (j === errorsIndex[index][0]) {
-                            // insert previously removed work back into users's attempt for feedback
+                            // insert previously removed words back into users's attempt (for feedback)
                             if (errorsIndex[index][1]) {
                                 verseAttempt.splice(j, 0, errorsIndex[index][2]);
                             }
@@ -171,13 +172,42 @@
                     }
 
                     // update feedback modal
+                    if (percent < 0){
+                        percent = 0;
+                    }
                     this.setState({
                         grade: percent.toString() + "%",
                     });
                     document.querySelector("#feedback").innerHTML = verseAttempt.join(" ");
 
-                    console.log(verseAttempt.join(" "));
-                    console.log(JSON.stringify(verseAttempt));
+                    // update App state
+                    this.props.handleState(percent);
+
+                    //send info to server
+                    const url = "http://127.0.0.1:8000/update-score";
+                    const data = {
+                        score: percent,
+                        reference: this.props.reference,
+                    }
+
+                    fetch(url,{
+                        method: "POST",
+                        credentials: "include",
+                        headers: {
+                            "X-CSRFToken": Cookies.get("csrftoken"),
+                            "Content-type": "application/json",
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        body: JSON.stringify(data)
+                    }).then(res => res.json())
+                    .then(response => {
+                        if (response.status !== "success"){
+                            alert("Your verse's score was not saved");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
 
                     // get modal and close button
                     const modal = document.querySelector("#modal-feedback");
@@ -206,7 +236,8 @@
                         text: "",
                         cachedText: [],
                         cacheIndex: 0,
-                        gradeMode: false
+                        gradeMode: false,
+                        score: ""
                     }
                 }
 
@@ -228,7 +259,8 @@
                             else {
                                 this.setState(state => ({
                                     text: response.text,
-                                    cachedText: [...state.cachedText, response.text]
+                                    cachedText: [...state.cachedText, response.text],
+                                    score: response.score
                                 }));
                             }
                         })
@@ -335,6 +367,12 @@
                     });
                 }
 
+                handleState = (newScore) => {
+                    this.setState({
+                        score: newScore
+                    });
+                }
+
                 render() {
                     if (this.state.gradeMode) {
                         return(
@@ -342,6 +380,7 @@
                                 changeMode={this.changeMode}
                                 text={this.state.cachedText[0]}
                                 reference={this.state.ref}
+                                handleState={this.handleState}
                             />
                         )
                     }
@@ -353,6 +392,7 @@
                                 removeWords={this.removeWords}
                                 restoreWords={this.restoreWords}
                                 changeMode={this.changeMode}
+                                score={this.state.score}
                             />
                         )
                     }
