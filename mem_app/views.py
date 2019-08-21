@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from .models import Verse, User_verses
-from json import dumps, loads
+
+import simplejson as json
 import requests
 
 # Create your views here.
@@ -80,6 +81,15 @@ def register(request):
     return render(request, "mem_app/register.html")
 
 def search(request, page_number):
+    # get user's verses
+    try:
+        # get verse information, add to simple list
+        verse_ids = User_verses.objects.filter(user_id=request.user.id)
+        verses = [row.verse_id.reference for row in verse_ids]
+
+    except User_verses.DoesNotExist:
+        verses = ["No verses found"]
+
     # check for empty search field
     user_query = request.GET["search_q"]
     if user_query == "":
@@ -87,10 +97,47 @@ def search(request, page_number):
             "user": request.user,
             "firstPage": 1,
             "message": "Error: Search field empty",
+            "verses": verses
         }
 
         # render error message
         return render(request, "mem_app/index.html", context)
+    
+    if not user_query.isalpha():
+        # first search for specific reference
+        url = "https://api.esv.org/v3/passage/text/"
+        headers = {"Authorization": "Token d81190f088982d48aea54a7154ff7b3e5b9a4dbe"}
+        params = {
+            "q": user_query,
+            "include-verse-numbers": False,
+            "include-first-verse-numbers": False,
+            "include-passage-references": False,
+            "include-footnotes": False,
+            "include-headings": False,
+            "include-short-copyright": False,
+        }
+
+        res = requests.get(url, params=params, headers=headers)
+        res_dict = res.json()
+
+
+        # if valid reference
+        if res_dict["canonical"]:
+
+            # prepare resonse data
+            passages = []
+            for passage in res_dict["passages"]:
+                passages.append({"reference": res_dict["canonical"], "content": passage})
+
+            context = {
+                "passages": passages,
+                "user": request.user,
+                "message": "",
+                "firstPage": 1,
+                "search_q": user_query,
+                "verses": verses,
+            }
+            return render(request, "mem_app/index.html", context)
     
     # attach API token, prepare url
     headers = {"Authorization": "Token d81190f088982d48aea54a7154ff7b3e5b9a4dbe"}
@@ -100,7 +147,7 @@ def search(request, page_number):
     }
     url = f"https://api.esv.org/v3/passage/search/"
 
-    # send request, convert to json reponse to a python dictionary
+    # send request, convert json response to a python dictionary
     res = requests.get(url, params=params, headers=headers)
     res_dict = res.json()
 
@@ -120,13 +167,14 @@ def search(request, page_number):
         "previousPage": previousPage,
         "nextPage": nextPage,
         "message": message,
+        "verses": verses,
     }
     return render(request, "mem_app/index.html", context)
 
 def add_verse(request):
     if request.method == "POST":
         # get JSON string, convert to a dict
-        data = loads(request.body)
+        data = json.loads(request.body)
 
         # debug prints
         print(data["ref"])
@@ -146,7 +194,7 @@ def add_verse(request):
             new_rel = User_verses(verse_id=Verse.objects.get(reference=data["ref"]), user_id=request.user.id)
             new_rel.save()
 
-        return HttpResponse(dumps({"ref": data["ref"], "text": data["text"]}))
+        return HttpResponse(json.dumps({"ref": data["ref"], "text": data["text"]}))
 
 def memorize(request, reference):
     context = {
@@ -169,8 +217,26 @@ def verse(request, reference):
     # check if reference apperas in user's verses, if so send data
     if reference in user_refs:
         verse_obj = Verse.objects.get(reference=reference)
+        user_verse = User_verses.objects.get(user_id=request.user.id, verse_id=verse_obj)
+        print(user_verse.score)
         verse_data["text"] = verse_obj.text
+        verse_data["score"] = user_verse.score
     else:
         verse_data["text"] = None
 
-    return HttpResponse(dumps(verse_data))
+    return HttpResponse(json.dumps(verse_data))
+
+def update_score(request):
+    # get data from POST
+    data = json.loads(request.body)
+
+    # get user's verse
+    verse = Verse.objects.get(reference=data["reference"])
+    user_verse = User_verses.objects.get(user_id=request.user.id, verse_id=verse)
+
+    # update score
+    user_verse.score = data["score"]
+    user_verse.save(update_fields=["score"])
+
+    # return success
+    return HttpResponse(json.dumps({"status": "success"}))

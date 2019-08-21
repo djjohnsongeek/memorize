@@ -9,5 +9,6 @@ urlpatterns = [
     path("search/<int:page_number>", views.search, name="search"),
     path("add-verse", views.add_verse, name="add_verse"),
     path("memorize/<str:reference>", views.memorize, name="memorize"),
-    path("verse/<str:reference>", views.verse, name="verse")
+    path("verse/<str:reference>", views.verse, name="verse"),
+    path("update-score", views.update_score, name="update_score"),
 ]
