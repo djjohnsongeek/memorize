@@ -9,4 +9,4 @@ class Verse(models.Model):
 class User_verses(models.Model):
     verse_id = models.ForeignKey(Verse, on_delete=models.CASCADE)
     user_id = models.IntegerField()
-    score = models.DecimalField(max_digits = 3, decimal_places = 2, default = 0.00)
+    score = models.DecimalField(max_digits = 3, decimal_places = 0, default = 0)
