@@ -2,16 +2,18 @@
 {% block title %} Login {% endblock %}
 
 {% block body %}
-<h1>Login</h1>
-{% if message %}
-<span>{{ message }}</span>
-{% endif %}
-<form action="{% url 'login_view' %}" method="POST">
-    {% csrf_token %}
-    <input type="text" name="username" placeholder="Username"><br/>
-    <input type="password" name="password" placeholder="Password" ><br/>
-    <button>Login</button>
-</form>
-<span>No account yet?</span>
-<a href="{% url 'register' %}">Register Here</a>
+<div class="div-main">
+    <h1>Login</h1>
+    {% if message %}
+        <span>{{ message }}</span>
+    {% endif %}
+    <form action="{% url 'login_view' %}" method="POST">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Username"><br/>
+        <input type="password" name="password" placeholder="Password" ><br/>
+        <button class="btns-login-register">Login</button>
+    </form>
+    <div class="spacer"></div>
+    <span>No account yet?<a class="register-link" href="{% url 'register' %}">Register Here</a></span>
+</div>
 {% endblock %}

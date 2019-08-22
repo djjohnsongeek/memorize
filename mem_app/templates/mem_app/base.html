@@ -10,15 +10,63 @@
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     </head>
     <body>
+        {% if login %}
+            <nav>
+                <div class="nav-link">
+                    <a href="{% url 'index' %}">Home</a><br/>
+                </div>
+                <div class="nav-link">
+                    <a href="{% url 'logout_view' %}">Logout</a>
+                </div>
+                <div class="nav-link">
+                    <span class="h2" id="your-verses">My Verses</span>
+                </div>
+            </nav>
+            <hr/>
+        {% endif %}
         {% block body %} {% endblock %}
-    </body>
-    <footer>
-        <div>
-            <span>
-                Unless otherwise indicated, all Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), copyright © 2001 by Crossway, 
-                a publishing ministry of Good News Publishers. Used by permission. All rights reserved. You may not copy or download more than 500 consecutive verses of
-                the ESV Bible or more than one half of any book of the ESV Bible.
-            </span>
+        <div id="modal-verses">
+            <div id="modal-verses-content">
+                <span id="close-verses">&times;</span>
+                {% if verses %}
+                    {% for verse in verses %}
+                        <div class="hidden-verses">
+                            <a href="http://127.0.0.1:8000/memorize/{{ verse }}">{{ verse }}</a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
-    </footer>
+        <footer>
+            <div class="spacer"></div>
+            <div>
+                <span>
+                    Unless otherwise indicated, all Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), copyright © 2001 by Crossway, 
+                    a publishing ministry of Good News Publishers. Used by permission. All rights reserved. You may not copy or download more than 500 consecutive verses of
+                    the ESV Bible or more than one half of any book of the ESV Bible.
+                </span>
+            </div>
+        </footer>
+    </body>
+    <script>
+        //add event listener to "Your Verses" nav item
+        document.getElementById("your-verses").addEventListener("click", showVerses);
+
+        function showVerses(event){
+            // get modal and close button
+            const modal = document.querySelector("#modal-verses");
+            const btnClose = document.querySelector("#close-verses");
+            // display modal
+            modal.style.display = "block";
+            // close modal
+            btnClose.onclick = () => {
+                modal.style.display = "none";
+            }
+            window.onclick = (event) => {
+                if (event.target == modal){
+                    modal.style.display = "none";
+                }
+            };
+        }
+    </script>
 </html>

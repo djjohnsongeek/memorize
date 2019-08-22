@@ -2,26 +2,11 @@
 {% block title %} Bible Memorization {% endblock %}
 {% block body %}
 <div class="div-main">  
-    <aside>
-        <h2>User: {{ user }}</h2>
-        <a href="{% url 'index' %}">Home</a><br/>
-        <a href="{% url 'logout_view' %}">Logout</a>
-        {% if verses %}
-            <h2>Your Verses</h2>
-            <ul class="verse-list">
-                {% for verse in verses %}
-                    <li>
-                        <a href="http://127.0.0.1:8000/memorize/{{ verse }}">{{ verse }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    </aside>
     <section>
         <h1>Search the Bible (ESV)</h1>
         <form action="{% url 'search' firstPage %}" method="GET">
-            <input autofocus autocomplete="off" type="text" name="search_q" placeholder="Keyword or reference"/>
-            <button>Search</button>
+            <input autofocus autocomplete="off" type="text" name="search_q" placeholder="Keyword or Reference"/><!--
+            --><button id="btn-search">Search</button>
         </form><br/>
         {% if message %}
             <span> {{ message }}</span>
@@ -54,7 +39,6 @@
                     <a href="http://127.0.0.1:8000/search/{{ nextPage }}?search_q={{ search_q }}">Next</a>
                 {% endif %}
             {% endif %}
-            <div class="spacer"></div>
         </div>
     </section>
 </div>
