@@ -29,6 +29,7 @@ def index(request):
             "user": request.user,
             "firstPage": 1,
             "verses": verses,
+            "login": True
         }
         return render(request, "mem_app/index.html", context)
 
@@ -81,6 +82,10 @@ def register(request):
     return render(request, "mem_app/register.html")
 
 def search(request, page_number):
+    # check if user is logged in
+    if not request.user.is_authenticated:
+        return render(request, "mem_app/login.html")
+
     # get user's verses
     try:
         # get verse information, add to simple list
@@ -113,6 +118,7 @@ def search(request, page_number):
             "include-first-verse-numbers": False,
             "include-passage-references": False,
             "include-footnotes": False,
+            "include-footnote-body": False,
             "include-headings": False,
             "include-short-copyright": False,
         }
@@ -136,6 +142,7 @@ def search(request, page_number):
                 "firstPage": 1,
                 "search_q": user_query,
                 "verses": verses,
+                "login": True
             }
             return render(request, "mem_app/index.html", context)
     
@@ -168,6 +175,7 @@ def search(request, page_number):
         "nextPage": nextPage,
         "message": message,
         "verses": verses,
+        "login": True,
     }
     return render(request, "mem_app/index.html", context)
 
@@ -175,6 +183,8 @@ def add_verse(request):
     if request.method == "POST":
         # get JSON string, convert to a dict
         data = json.loads(request.body)
+        data["text"] = data["text"].lstrip()
+        data["text"] = data["text"].rstrip("\n")
 
         # debug prints
         print(data["ref"])
@@ -197,8 +207,21 @@ def add_verse(request):
         return HttpResponse(json.dumps({"ref": data["ref"], "text": data["text"]}))
 
 def memorize(request, reference):
+    # check if user is logged in
+    if not request.user.is_authenticated:
+        return render(request, "mem_app/login.html")
+
+    try:
+        # get verse information, add to simple list
+        verse_ids = User_verses.objects.filter(user_id=request.user.id)
+        verses = [row.verse_id.reference for row in verse_ids]
+    except User_verses.DoesNotExist:
+        verses = ["No verses Saved for this user"]
+
     context = {
-        "ref": reference
+        "ref": reference,
+        "verses": verses,
+        "login": True
     }
     return render(request, "mem_app/memorize.html", context)
 
