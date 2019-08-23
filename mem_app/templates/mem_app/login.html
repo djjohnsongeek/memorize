@@ -5,7 +5,7 @@
 <div class="div-main">
     <h1>Login</h1>
     {% if message %}
-        <span>{{ message }}</span>
+        <span class="text-error">{{ message }}</span>
     {% endif %}
     <form action="{% url 'login_view' %}" method="POST">
         {% csrf_token %}
@@ -14,6 +14,6 @@
         <button class="btns-login-register">Login</button>
     </form>
     <div class="spacer"></div>
-    <span>No account yet?<a class="register-link" href="{% url 'register' %}">Register Here</a></span>
+    <span>No account yet? <a class="register-link" href="{% url 'register' %}">Register Here</a></span>
 </div>
 {% endblock %}

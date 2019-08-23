@@ -12,11 +12,10 @@ h3{
 .verse-to-mem{
     font-family:'Cousine', 'Courier New', Courier, monospace;
     font-size: 26px;
-    background-color:#87bbde;
     padding: 25px;
-    width: 40%;
+    width: 60%;
     margin: auto;
-    border-radius: 3px;
+    border: 1px solid grey;
 }
 #spanText{
     font-size: 20px;
@@ -24,23 +23,46 @@ h3{
 #spanRef {
     font-weight: bold;
 }
-
-.btnVerseControls{
-    width: 110px;
-    height: 50px;
+#btn-remove-words:hover:enabled{
+    border: 1px solid rgb(214, 0, 0);
 }
-#btn-instructions, #btn-grade-mode, #btn-study-mode{
+#btn-restore-words:hover:enabled{
+    border: 1px solid green;
+}
+
+.btn-verse-controls{
+    width: 20%;
+    height: 50px;
+    background-color: white;
+    border: 1px solid grey;
+    border-top: white;
+    font-weight: 600;
+}
+#btn-grade-verse, #btn-study-mode{
+    width: 20%;
+}
+#btn-grade-verse:hover,  #btn-study-mode:hover{
+    border: 1px solid cornflowerblue;
+}
+
+#btn-instructions, #btn-grade-mode{
     border: 0px solid white;
     background-color: white;
     cursor: pointer;
     color:rgb(49, 74, 119);
-    font-size: 16px;
+    font-size: 1.3rem;
 }
-#btn-instructions:hover, #btn-grade-mode:hover, #btn-study-mode:hover{
+#btn-instructions:hover, #btn-grade-mode:hover{
     color:cornflowerblue;
 }
-.divVerseControls{
+.div-verse-controls{
     text-align: center;
+}
+#textarea-verse{
+    font-size: 1.4rem;
+    width: 850px;
+    height: 300px;
+    margin-bottom: 0;
 }
 /* modal styling */
 #modal-verses{
@@ -62,6 +84,13 @@ h3{
     width: 12%;
     height: 100%;
     text-align: left;
+    font-size: 1.4rem;
+    box-shadow: 1px 1px 6px rgba(82, 82, 82, 0.4);
+    position: absolute;
+    overflow: auto;
+
+    animation-name: "slide-in-left";
+    animation-duration: .3s;
 }
 .modal{
     z-index: 1;
@@ -82,6 +111,12 @@ h3{
     padding: 20px;
     border: 1px solid #888;
     width: 40%;
+    font-size: 1.4rem;
+    position: relative;
+    left: auto;
+
+    animation-name: "slide-in-top";
+    animation-duration: .3s;
 }
 #close, #close-feedback, #close-verses {
     color: #aaa;
@@ -129,7 +164,7 @@ h1{
 }
 
 footer {
-    font-size: 9px;
+    font-size: .6rem;
     width: 66%;
     margin: auto;
     color: grey;
@@ -165,7 +200,7 @@ hr{
     padding-bottom: 1px;
 }
 #btn-search:hover{
-    border: 1px solid rgb(101, 101, 218);
+    border: 1px solid cornflowerblue;
 }
 
 /* LINKS */
@@ -195,11 +230,12 @@ nav{
 }
 .nav-link{
     margin: 10px;
-    font-weight: 1000;
+    font-weight: 500;
 }
 
 #your-verses{
     color:rgb(49, 74, 119);
+    font-weight: 500;
 }
 
 .page-nav{
@@ -215,7 +251,13 @@ nav{
     width: 33%;
     height: 50px;
     font-size: 1.25rem;
-    padding: 0;
+    padding-left: 5px;
+    padding-right: 1px;
+    background-color: white;
+    border: 1px solid grey;
+}
+.btns-login-register:hover{
+    border: 1px solid cornflowerblue;
 }
 
 input{
@@ -224,4 +266,42 @@ input{
     font-size: 1.25rem;
     margin: 5px;
     padding-left: 5px;
+}
+
+input:focus{
+    border: 1px solid cornflowerblue;
+}
+
+/* ANIMATIONS */
+@keyframes slide-in-left{
+    from {
+        left: -300px;
+        opacity: 0;
+    }
+    to {
+        left: 0;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes slide-in-left{
+    from {
+        left: -300px;
+        opacity: 0;
+    }
+    to {
+        left: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes slide-in-top{
+    from {
+        top: -300px;
+        opacity: 0;
+    }
+    to {
+        top: 0;
+        opacity: 1;
+    }
 }

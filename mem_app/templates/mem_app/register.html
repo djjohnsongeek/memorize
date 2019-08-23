@@ -5,7 +5,7 @@
 <div class="div-main">
     <h1>Register</h1>
     {% if message %}
-        <span> {{ message }}</span> 
+        <span class="text-error"> {{ message }}</span> 
     {% endif %}
     <form action="{% url 'register' %}" method="POST">
         {% csrf_token %}
@@ -18,7 +18,7 @@
     <div class="spacer"></div>
     <span>
         Already have an Account?
-        <a class="register-link" href="{% url 'login_view' %}">Login Here</a>
+        <a class="register-link" href="{% url 'login_view' %}"> Login Here</a>
     </span>
     
 </div>
