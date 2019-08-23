@@ -12,7 +12,7 @@ import requests
 def index(request):
     # check if user is logged in
     if not request.user.is_authenticated:
-        return render(request, "mem_app/login.html")
+        return redirect(reverse("login_view"))
 
     # render user's homepage
     else:
@@ -35,6 +35,9 @@ def index(request):
 
 def login_view(request):
     if request.method == "POST":
+        # logout user just in case
+        logout(request)
+
         # get user info
         username = request.POST["username"]
         password = request.POST["password"]
@@ -79,12 +82,14 @@ def register(request):
         new_user.save()
         return HttpResponseRedirect(reverse('index'))
     
+    # logout user
+    logout(request)
     return render(request, "mem_app/register.html")
 
 def search(request, page_number):
     # check if user is logged in
     if not request.user.is_authenticated:
-        return render(request, "mem_app/login.html")
+        return redirect(reverse("login_view"))
 
     # get user's verses
     try:
@@ -99,6 +104,7 @@ def search(request, page_number):
     user_query = request.GET["search_q"]
     if user_query == "":
         context = {
+            "login": True,
             "user": request.user,
             "firstPage": 1,
             "message": "Error: Search field empty",
@@ -180,6 +186,9 @@ def search(request, page_number):
     return render(request, "mem_app/index.html", context)
 
 def add_verse(request):
+    if not request.user.is_authenticated:
+        return redirect(revers("login_view"))
+
     if request.method == "POST":
         # get JSON string, convert to a dict
         data = json.loads(request.body)
@@ -209,7 +218,7 @@ def add_verse(request):
 def memorize(request, reference):
     # check if user is logged in
     if not request.user.is_authenticated:
-        return render(request, "mem_app/login.html")
+        return redirect(reverse("login_view"))
 
     try:
         # get verse information, add to simple list
@@ -250,6 +259,9 @@ def verse(request, reference):
     return HttpResponse(json.dumps(verse_data))
 
 def update_score(request):
+    if not request.user.is_authenticated:
+        return redirect(reverse("login_view"))
+        
     # get data from POST
     data = json.loads(request.body)
 
