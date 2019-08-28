@@ -29,7 +29,6 @@ def index(request):
             "user": request.user,
             "firstPage": 1,
             "verses": verses,
-            "login": True
         }
         return render(request, "mem_app/index.html", context)
 
@@ -148,7 +147,6 @@ def search(request, page_number):
                 "firstPage": 1,
                 "search_q": user_query,
                 "verses": verses,
-                "login": True
             }
             return render(request, "mem_app/index.html", context)
     
@@ -181,7 +179,6 @@ def search(request, page_number):
         "nextPage": nextPage,
         "message": message,
         "verses": verses,
-        "login": True,
     }
     return render(request, "mem_app/index.html", context)
 
@@ -230,11 +227,14 @@ def memorize(request, reference):
     context = {
         "ref": reference,
         "verses": verses,
-        "login": True
     }
     return render(request, "mem_app/memorize.html", context)
 
 def verse(request, reference):
+    # check if user is logged in
+    if not request.user.is_authenticated:
+        return redirect(reverse("login_view"))
+
     user_refs = []
     verse_data = {
         "ref": reference,
@@ -246,7 +246,7 @@ def verse(request, reference):
     for verse in verses:
         user_refs.append(verse.verse_id.reference)
 
-    # check if reference apperas in user's verses, if so send data
+    # check if reference appear in user's verses, if so send data
     if reference in user_refs:
         verse_obj = Verse.objects.get(reference=reference)
         user_verse = User_verses.objects.get(user_id=request.user.id, verse_id=verse_obj)
@@ -259,6 +259,7 @@ def verse(request, reference):
     return HttpResponse(json.dumps(verse_data))
 
 def update_score(request):
+    # check if user is logged in
     if not request.user.is_authenticated:
         return redirect(reverse("login_view"))
         
