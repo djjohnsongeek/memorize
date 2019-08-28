@@ -76,12 +76,8 @@ WSGI_APPLICATION = 'memorize.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'memory',
-        'USER': 'postgres',
-        'PASSWORD': 'infallible',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
     }
 }
 
