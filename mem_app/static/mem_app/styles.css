@@ -1,4 +1,4 @@
-/* Memorize React APP */
+/* MEMORIZE REACT APP STYLING */
 #app{
     text-align: left;
 }
@@ -11,11 +11,11 @@ h3{
 }
 .verse-to-mem{
     font-family:'Cousine', 'Courier New', Courier, monospace;
-    font-size: 26px;
+    font-size: 2.5rem;
     padding: 25px;
     width: 60%;
     margin: auto;
-    border: 1px solid grey;
+    border: 1px solid white;
 }
 #spanText{
     font-size: 20px;
@@ -31,16 +31,13 @@ h3{
 }
 
 .btn-verse-controls{
-    width: 20%;
+    width: 150px;
     height: 50px;
     background-color: white;
     border: 1px solid grey;
-    border-top: white;
     font-weight: 600;
 }
-#btn-grade-verse, #btn-study-mode{
-    width: 20%;
-}
+
 #btn-grade-verse:hover,  #btn-study-mode:hover{
     border: 1px solid cornflowerblue;
 }
@@ -64,7 +61,7 @@ h3{
     height: 300px;
     margin-bottom: 0;
 }
-/* modal styling */
+/* MODAL STYLING */
 #modal-verses{
     z-index: 1;
     display: none;
@@ -81,7 +78,7 @@ h3{
     margin-left: 0;
     padding: 20px;
     border-right: 1px solid rgb(228, 228, 228);
-    width: 12%;
+    width: 170px;
     height: 100%;
     text-align: left;
     font-size: 1.4rem;
@@ -89,8 +86,11 @@ h3{
     position: absolute;
     overflow: auto;
 
+    
     animation-name: "slide-in-left";
     animation-duration: .3s;
+    -webkit-animation-name: "slide-in-left";
+    -webkit-animation-duration: .3s;
 }
 .modal{
     z-index: 1;
@@ -117,6 +117,8 @@ h3{
 
     animation-name: "slide-in-top";
     animation-duration: .3s;
+    -webkit-animation-name: "slide-in-top";
+    -webkit-animation-duration: .3s;
 }
 #close, #close-feedback, #close-verses {
     color: #aaa;
@@ -142,7 +144,7 @@ h3{
 }
 
 
-/* base.html or index.html */
+/* BASE.HTML OR INDEX.HTML STYLING */
 html{
     font-size: 14px;
 }
@@ -153,10 +155,7 @@ h1{
     font-size: 3.5rem;
     text-align: center;
 }
-.h2{
-    font-size: 1.5rem;
-    font-weight: 1000;
-}
+
 .ref {
     font-weight: bold;
     font-size: 20px;
@@ -202,14 +201,23 @@ hr{
 #btn-search:hover{
     border: 1px solid cornflowerblue;
 }
-
-/* LINKS */
+.btnAddVerse{
+    background-color: white;
+    border: 1px solid grey;
+    height: 40px;
+    width: 100%;
+    font-size: 1.3rem;
+}
+.btnAddVerse:hover{
+    border: 1px solid cornflowerblue;
+}
+/* LINK STYLING */
 a {
     text-decoration: none;
     color:rgb(49, 74, 119);
     font-size: 1.3rem;
 }
-a:hover, #your-verses:hover{
+a:hover, #my-verses:hover{
     color:cornflowerblue;
     cursor: pointer;
 }
@@ -223,7 +231,7 @@ a:hover, #your-verses:hover{
     font-size: 1rem;
 }
 
-/* nav bar */
+/* NAV BAR STYLING */
 nav{
     display: flex;
     justify-content: center;
@@ -233,9 +241,10 @@ nav{
     font-weight: 500;
 }
 
-#your-verses{
+#my-verses{
     color:rgb(49, 74, 119);
     font-weight: 500;
+    font-size: 1.3rem;
 }
 
 .page-nav{
@@ -245,7 +254,7 @@ nav{
     font-size: 1.3rem;
 }
 
-/* LOGIN AND SEARCH INPUT */
+/* LOGIN AND SEARCH INPUT STYLING */
 .btns-login-register{
     box-sizing: content-box;
     width: 33%;
@@ -305,3 +314,105 @@ input:focus{
         opacity: 1;
     }
 }
+
+@-webkit-keyframes slide-in-top{
+    from {
+        top: -300px;
+        opacity: 0;
+    }
+    to {
+        top: 0;
+        opacity: 1;
+    }
+}
+
+/* RESPONSIVE DESIGN */
+/*
+#btn-search
+#search-field
+section
+input
+.btns-login-register
+h1
+*/
+@media (max-width:1050px){
+    /*modal styling*/
+    #modal-verses-content{
+        position: relative;
+        margin: 15% auto;
+        left: auto;
+        top: auto;
+        width: 80%;
+        height: 125px;
+        overflow: auto;
+    }
+}
+@media (max-width:900px){
+    #textarea-verse{
+        width: 95%;
+    }
+
+    input, .btns-login-register{
+        width: 70%;
+    }
+    .passage{
+        width: 90%;
+    }
+    section{
+        width: 100%;
+    }
+
+}
+@media (max-width:710px){
+    h1{
+        font-size: 2rem;
+    }
+    .verse-to-mem{
+        font-size: 1.5rem;
+    }
+
+}
+@media (max-width:650px){
+    input, .btns-login-register{
+        width: 90%;
+    }
+    #search-field{
+        width: 70%;
+    }
+    section{
+        width: 100%;
+    }
+
+}
+
+@media (max-width:500px){
+    .verse-to-mem{
+        width: 90%;
+        padding: 5px;
+    }
+    .spacer{
+        height: 8px;
+    }
+}
+
+@media (max-width:400px){
+    .btn-verse-controls{
+        width: 125px;
+    }
+    html{
+        font-size: 12px;
+    }
+    #btn-search{
+        width: 70%;
+        padding: 5px;
+    }
+
+    #search-field{
+        padding: 5px;
+    }
+
+    .passage{
+        width: 95%;
+    }
+}
+

@@ -10,7 +10,7 @@
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     </head>
     <body>
-        {% if login %}
+        {% if user.is_authenticated %}
             <nav>
                 <div class="nav-link">
                     <a href="{% url 'index' %}">Home</a><br/>
@@ -19,7 +19,7 @@
                     <a href="{% url 'logout_view' %}">Logout</a>
                 </div>
                 <div class="nav-link">
-                    <span class="h2" id="your-verses">My Verses</span>
+                    <span id="my-verses">My Verses</span>
                 </div>
             </nav>
             <hr/>
@@ -50,7 +50,7 @@
     </body>
     <script>
         //add event listener to "Your Verses" nav item
-        document.getElementById("your-verses").addEventListener("click", showVerses);
+        document.getElementById("my-verses").addEventListener("click", showVerses);
 
         function showVerses(event){
             // get modal and close button

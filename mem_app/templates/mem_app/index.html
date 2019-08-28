@@ -3,9 +3,9 @@
 {% block body %}
 <div class="div-main">  
     <section>
-        <h1>Search the Bible (ESV)</h1>
+        <h1>Search the Bible</h1>
         <form action="{% url 'search' firstPage %}" method="GET">
-            <input autofocus autocomplete="off" type="text" name="search_q" placeholder="Keyword or Reference"/><!--
+            <input id="search-field" autofocus autocomplete="off" type="text" name="search_q" placeholder="Keyword or Reference"/><!--
             --><button id="btn-search">Search</button>
         </form><br/>
         {% if message %}

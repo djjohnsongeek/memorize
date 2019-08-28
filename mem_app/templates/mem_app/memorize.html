@@ -21,6 +21,7 @@
                             <span id="spanRef">{this.props.reference}</span><br/>
                             <span id="spanText">{this.props.text}</span>
                         </div>
+                        <div className="spacer"></div>
                         <div className="div-verse-controls">
                             <button onClick={this.props.restoreWords} className="btn-verse-controls" id="btn-restore-words">Restore Words</button>
                             <button onClick={this.props.removeWords} className="btn-verse-controls" id="btn-remove-words">Remove Words</button><br/>
@@ -32,7 +33,7 @@
                                     <p>
                                      Say the verse outloud, or write it down. Then click the <span className="txt-emphasis-blue">Remove Words</span> Button to remove
                                      a random number of words. If you need to go back, click the <span className="txt-emphasis-green">Restore Words</span> button.
-                                     Repeat the process until you can say or write the entire verse with no words showing.
+                                     Repeat the process until you can say or write the entire verse with no words showing. Test your knowlage by clicking <b>Attempt</b>.
                                     </p>
                                 </div>
                             </div>
@@ -70,8 +71,11 @@
                     <div className="div-main">
                         <h1>Verse Grading</h1>
                         <textarea id="textarea-verse" autoFocus placeholder="Verse Reference&#13;&#10;Verse Body..."></textarea><br/>
-                        <button onClick={this.gradeVerse} className="btn-verse-controls" id="btn-grade-verse">Grade Verse</button>
-                        <button onClick={this.props.changeMode} className="btn-verse-controls" id="btn-study-mode">Study Verse</button>
+                        <div className="spacer"></div>
+                        <div className="div-verse-controls">
+                            <button onClick={this.gradeVerse} className="btn-verse-controls" id="btn-grade-verse">Grade Verse</button>
+                            <button onClick={this.props.changeMode} className="btn-verse-controls" id="btn-study-mode">Study Verse</button>
+                        </div>
                         <div id="modal-feedback" className="modal">
                             <div className="modal-content">
                                 <span id="close-feedback">&times;</span>
