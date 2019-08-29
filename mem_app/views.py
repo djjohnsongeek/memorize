@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from .models import Verse, User_verses
 
 import simplejson as json
 import requests
+import re
 
 # Create your views here.
 def index(request):
@@ -45,13 +47,14 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
 
         # log user in if valid
-        if user is not None:
+        if user:
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
 
         # render login, w/ error message
         else:
-            return render(request, "mem_app/login.html", {"message": "Invalid Credentials"})
+            messages.error(request, "Invalid Credentials")
+            return HttpResponseRedirect(reverse("login_view"))
 
     return render(request, "mem_app/login.html")
 
@@ -69,18 +72,38 @@ def register(request):
 
         # check for empty inputs
         if "" in {username, email, password}:
-            return render(request, "mem_app/register.html", {"message": "All fields must be filled out"})
+            messages.error(request, "All fields must be filled out")
+            return HttpResponseRedirect(reverse("register"))
 
-        # ensure confirm password
+        # ensure password matches
         if password != request.POST["confirm_pw"]:
-            return render(request, "mem_app/register.html", {"message": "Passwords do no Match"})
+            messages.error(request, "Passwords do not match")
+            return HttpResponseRedirect(reverse("register"))
 
-        # insert user info into the database, redirect to homepage
-        new_user = User.objects.create_user(username, email, password)
+        # check that email address is in a correct format
+        # Not a full proof regex
+        regex = re.compile(r".+@.+\.[A-Za-z]{2,4}$")
+        if not regex.match(email):
+            messages.error(request, "Invalid Email")
+            return HttpResponseRedirect(reverse("register"))
+
+        # attempt to create new user
+        try:
+            new_user = User.objects.create_user(username, email, password)
+        except:
+            messages.error(request, "Account creation failed")
+            messages.error(request, "Try a different username")
+            return HttpResponseRedirect(reverse("register"))
+
+        # save new user info
         new_user.first_name = username
         new_user.save()
-        return HttpResponseRedirect(reverse('index'))
-    
+
+        # redirect to login
+        messages.success(request, "Account Created")
+        return HttpResponseRedirect(reverse('login_view'))
+
+    # GET requests
     # logout user
     logout(request)
     return render(request, "mem_app/register.html")
@@ -95,7 +118,6 @@ def search(request, page_number):
         # get verse information, add to simple list
         verse_ids = User_verses.objects.filter(user_id=request.user.id)
         verses = [row.verse_id.reference for row in verse_ids]
-
     except User_verses.DoesNotExist:
         verses = ["No verses found"]
 
@@ -192,10 +214,6 @@ def add_verse(request):
         data["text"] = data["text"].lstrip()
         data["text"] = data["text"].rstrip("\n")
 
-        # debug prints
-        print(data["ref"])
-        print(data["text"])
-
         # add verse to database, pass error if verse is already in database
         new_verse = Verse(reference=data["ref"], text=data["text"])
 
@@ -222,7 +240,7 @@ def memorize(request, reference):
         verse_ids = User_verses.objects.filter(user_id=request.user.id)
         verses = [row.verse_id.reference for row in verse_ids]
     except User_verses.DoesNotExist:
-        verses = ["No verses Saved for this user"]
+        verses = ["No verses saved for this user"]
 
     context = {
         "ref": reference,

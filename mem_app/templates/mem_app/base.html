@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
-    <head>    
-        <title>
-            {% block title %} {% endblock %}
-        </title>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">        
         {% load static %}
         <link rel="stylesheet" type="text/css" href="{% static 'mem_app/styles.css' %}">
         <link href="https://fonts.googleapis.com/css?family=Lato|Montserrat&display=swap" rel="stylesheet"> 
-        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>    
+        <title>
+            {% block title %} {% endblock %}
+        </title>
     </head>
     <body>
         {% if user.is_authenticated %}

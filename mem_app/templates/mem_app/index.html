@@ -26,7 +26,7 @@
                 <div class="passage">
                     <span class="ref">{{ passage.reference }}</span><br/>
                     <span>{{ passage.content }}</span><br/>
-                    <button class="btnAddVerse">Memorize</button>
+                    <button class="btn-add-verse">Memorize</button>
                 </div>
                 <br/>
             {% endfor %}
@@ -44,7 +44,7 @@
 </div>
 <script>
     // add event listeners to all the generated buttons
-    const btns = document.getElementsByClassName("btnAddVerse")
+    const btns = document.getElementsByClassName("btn-add-verse")
     for (let i = 0; i < btns.length; i ++){
         btns[i].addEventListener("click", addVerse);
     }

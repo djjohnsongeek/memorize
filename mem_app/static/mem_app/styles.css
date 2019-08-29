@@ -17,10 +17,10 @@ h3{
     margin: auto;
     border: 1px solid white;
 }
-#spanText{
+#span-text{
     font-size: 20px;
 }
-#spanRef {
+#span-ref {
     font-weight: bold;
 }
 #btn-remove-words:hover:enabled{
@@ -135,12 +135,13 @@ h3{
     font-weight: bold;
     color: rgb(49, 74, 119);
 }
-.txt-emphasis-green{
+.txt-emphasis-green, .success{
     font-weight: bold;
     color: rgb(44, 119, 37);
 }
-.text-error{
+.text-error, .error{
     color: rgb(228, 13, 13);
+    font-weight: bold;
 }
 
 
@@ -201,14 +202,15 @@ hr{
 #btn-search:hover{
     border: 1px solid cornflowerblue;
 }
-.btnAddVerse{
+.btn-add-verse{
     background-color: white;
     border: 1px solid grey;
     height: 40px;
     width: 100%;
     font-size: 1.3rem;
+    margin-top: 5px;
 }
-.btnAddVerse:hover{
+.btn-add-verse:hover{
     border: 1px solid cornflowerblue;
 }
 /* LINK STYLING */
@@ -264,6 +266,7 @@ nav{
     padding-right: 1px;
     background-color: white;
     border: 1px solid grey;
+    margin: 5px;
 }
 .btns-login-register:hover{
     border: 1px solid cornflowerblue;

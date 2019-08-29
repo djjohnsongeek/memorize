@@ -4,8 +4,10 @@
 {% block body %}
 <div class="div-main">
     <h1>Register</h1>
-    {% if message %}
-        <span class="text-error"> {{ message }}</span> 
+    {% if messages %}
+        {% for message in messages %}
+        <span class="{{ message.tags }}"> {{ message }}</span><br/>
+        {% endfor %}
     {% endif %}
     <form action="{% url 'register' %}" method="POST">
         {% csrf_token %}
