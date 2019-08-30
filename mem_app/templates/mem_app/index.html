@@ -77,7 +77,7 @@
         }).then(res => res.json())
         //upon successful response: redirect
         .then(response => {
-            window.location.href=`http://127.0.0.1:8000/memorize/${response.ref}`;
+            window.location.href=`https://the-treasured-word.herokuapp.com/memorize/${response.ref}`;
         })
         .catch(error => console.error('Error:', error));
     }
