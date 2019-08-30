@@ -32,7 +32,7 @@
                 {% if verses %}
                     {% for verse in verses %}
                         <div class="hidden-verses">
-                            <a href="http://127.0.0.1:8000/memorize/{{ verse }}">{{ verse }}</a>
+                            <a href="{% url 'memorize' reference=verse %}">{{ verse }}</a>
                         </div>
                     {% endfor %}
                 {% endif %}

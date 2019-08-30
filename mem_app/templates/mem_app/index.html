@@ -14,11 +14,11 @@
         <div>
             {% if currentPage and not message %}
                 {% if currentPage > 1 %}
-                    <a href="http://127.0.0.1:8000/search/{{ previousPage }}?search_q={{ search_q }}">Prev.</a>
+                    <a href="{% url 'search' page_number=previousPage %}?search_q={{ search_q }}">Prev</a>
                 {% endif %}
                 <span class="page-nav-text">Page {{ currentPage }} of {{ totalPages }}</span>
                 {% if nextPage <= totalPages and totalPages > 1 %}
-                    <a href="http://127.0.0.1:8000/search/{{ nextPage }}?search_q={{ search_q }}">Next</a>
+                    <a href="{% url 'search' page_number=nextPage %}?search_q={{ search_q }}">Next</a>
                 {% endif %}
             {% endif %}
             <p></p>
@@ -32,11 +32,11 @@
             {% endfor %}
             {% if currentPage and not message %}
                 {% if currentPage > 1 %}
-                    <a href="http://127.0.0.1:8000/search/{{ previousPage }}?search_q={{ search_q }}">Prev.</a>
+                    <a href="{% url 'search' page_number=previousPage %}?search_q={{ search_q }}">Prev.</a>
                 {% endif %}
                 <span class="page-nav-text">Page {{ currentPage }} of {{ totalPages }}</span>
                 {% if nextPage <= totalPages and totalPages > 1 %}
-                    <a href="http://127.0.0.1:8000/search/{{ nextPage }}?search_q={{ search_q }}">Next</a>
+                    <a href="{% url 'search' page_number=nextPage %}?search_q={{ search_q }}">Next</a>
                 {% endif %}
             {% endif %}
         </div>
@@ -57,7 +57,7 @@
         const ref = verseElement.previousElementSibling.previousElementSibling.innerHTML;
 
         // setup url and data for the POST request
-        url = "http://127.0.0.1:8000/add-verse";
+        url = "{% url 'add_verse' %}";
         const data = {
             "ref": ref,
             "text": text,

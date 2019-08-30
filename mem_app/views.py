@@ -12,12 +12,8 @@ import re
 
 # Create your views here.
 def index(request):
-    # check if user is logged in
-    if not request.user.is_authenticated:
-        return redirect(reverse("login_view"))
-
-    # render user's homepage
-    else:
+    # check if user is logged in, render user's homepage
+    if request.user.is_authenticated:
         try:
             # get verse information, add to simple list
             verse_ids = User_verses.objects.filter(user_id=request.user.id)
@@ -33,6 +29,8 @@ def index(request):
             "verses": verses,
         }
         return render(request, "mem_app/index.html", context)
+    else:
+        return redirect(reverse("login_view"))
 
 def login_view(request):
     if request.method == "POST":
@@ -47,14 +45,15 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
 
         # log user in if valid
-        if user:
+        if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return redirect(reverse("index"))
 
         # render login, w/ error message
         else:
+
             messages.error(request, "Invalid Credentials")
-            return HttpResponseRedirect(reverse("login_view"))
+            return redirect(reverse("login_view"))
 
     return render(request, "mem_app/login.html")
 
@@ -123,6 +122,7 @@ def search(request, page_number):
 
     # check for empty search field
     user_query = request.GET["search_q"]
+
     if user_query == "":
         context = {
             "login": True,
@@ -157,7 +157,7 @@ def search(request, page_number):
         # if valid reference
         if res_dict["canonical"]:
 
-            # prepare resonse data
+            # prepare response data
             passages = []
             for passage in res_dict["passages"]:
                 passages.append({"reference": res_dict["canonical"], "content": passage})
