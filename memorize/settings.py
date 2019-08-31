@@ -130,7 +130,7 @@ STATICFILES_DIRS = (
 # Email ADMIN errors:
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'danieleejohnson@gmail.com'
-EMAIL_HOST_PASSWORD = 'zn2&dsZhmo5y!G2$M%mGM2W*'
+EMAIL_HOST_PASSWORD = os.getenv["EMAIL_PW"]
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 SERVER_EMAIL = EMAIL_HOST_USER
