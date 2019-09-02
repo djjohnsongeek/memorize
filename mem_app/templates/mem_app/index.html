@@ -40,44 +40,44 @@
             {% endif %}
         </div>
     </section>
-<script>
-    // add event listeners to all the generated buttons
-    const btns = document.getElementsByClassName("btn-add-verse")
-    for (let i = 0; i < btns.length; i ++){
-        btns[i].addEventListener("click", addVerse);
-    }
-
-    // send JSON string with verse reference and text to server
-    function addVerse(event){
-        // get reference and verse text from DOM
-        const verseElement = event.target.previousElementSibling.previousElementSibling;
-        const text = verseElement.innerHTML;
-        const ref = verseElement.previousElementSibling.previousElementSibling.innerHTML;
-
-        // setup url and data for the POST request
-        url = "{% url 'add_verse' %}";
-        const data = {
-            "ref": ref,
-            "text": text,
-            "csrfmiddlewaretoken": Cookies.get("csrftoken")
-        };
+    <script>
+        // add event listeners to all the generated buttons
+        const btns = document.getElementsByClassName("btn-add-verse")
+        for (let i = 0; i < btns.length; i ++){
+            btns[i].addEventListener("click", addVerse);
+        }
+    
+        // send JSON string with verse reference and text to server
+        function addVerse(event){
+            // get reference and verse text from DOM
+            const verseElement = event.target.previousElementSibling.previousElementSibling;
+            const text = verseElement.innerHTML;
+            const ref = verseElement.previousElementSibling.previousElementSibling.innerHTML;
         
-        // send POST request to server
-        fetch(url, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "X-CSRFToken": Cookies.get("csrftoken"),
-                "Content-type": "application/json",
-                "X-Requested-With": "XMLHttpRequest"
-            },
-            body: JSON.stringify(data)
-        }).then(res => res.json())
-        //upon successful response: redirect
-        .then(response => {
-            window.location.href=`https://the-treasured-word.herokuapp.com/memorize/${response.ref}`;
-        })
-        .catch(error => console.error('Error:', error));
-    }
-</script>
+            // setup url and data for the POST request
+            url = "{% url 'add_verse' %}";
+            const data = {
+                "ref": ref,
+                "text": text,
+                "csrfmiddlewaretoken": Cookies.get("csrftoken")
+            };
+            
+            // send POST request to server
+            fetch(url, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "X-CSRFToken": Cookies.get("csrftoken"),
+                    "Content-type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: JSON.stringify(data)
+            }).then(res => res.json())
+            //upon successful response: redirect
+            .then(response => {
+                window.location.href=`https://the-treasured-word.herokuapp.com/memorize/${response.ref}`;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
 {% endblock %}
