@@ -1,0 +1,421 @@
+/* MEMORIZE REACT APP STYLING */
+#app{
+    text-align: left;
+}
+#ref-title{
+    display: none;
+}
+h3{
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+}
+.verse-to-mem{
+    font-family:'Cousine', 'Courier New', Courier, monospace;
+    font-size: 2.5rem;
+    padding: 25px;
+    width: 60%;
+    margin: auto;
+    border: 1px solid white;
+}
+#span-text{
+    font-size: 20px;
+}
+#span-ref {
+    font-weight: bold;
+}
+#btn-remove-words:hover:enabled{
+    border: 1px solid rgb(214, 0, 0);
+}
+#btn-restore-words:hover:enabled{
+    border: 1px solid green;
+}
+
+.btn-verse-controls{
+    width: 150px;
+    height: 50px;
+    background-color: white;
+    border: 1px solid grey;
+    font-weight: 600;
+}
+
+#btn-grade-verse:hover,  #btn-study-mode:hover{
+    border: 1px solid cornflowerblue;
+}
+
+#btn-instructions, #btn-grade-mode{
+    border: 0px solid white;
+    background-color: white;
+    cursor: pointer;
+    color:rgb(49, 74, 119);
+    font-size: 1.3rem;
+}
+#btn-instructions:hover, #btn-grade-mode:hover{
+    color:cornflowerblue;
+}
+.div-verse-controls{
+    text-align: center;
+}
+#textarea-verse{
+    font-size: 1.4rem;
+    width: 850px;
+    height: 300px;
+    margin-bottom: 0;
+}
+/* MODAL STYLING */
+#modal-verses{
+    z-index: 1;
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#modal-verses-content{
+    font-family: 'Lato', sans-serif;
+    background-color: #fefefe;
+    margin-left: 0;
+    padding: 20px;
+    border-right: 1px solid rgb(228, 228, 228);
+    width: 170px;
+    height: 100%;
+    text-align: left;
+    font-size: 1.4rem;
+    box-shadow: 1px 1px 6px rgba(82, 82, 82, 0.4);
+    position: absolute;
+    overflow: auto;
+
+    
+    animation-name: "slide-in-left";
+    animation-duration: .3s;
+    -webkit-animation-name: "slide-in-left";
+    -webkit-animation-duration: .3s;
+}
+.modal{
+    z-index: 1;
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+    font-family: 'Lato', sans-serif;
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+    font-size: 1.4rem;
+    position: relative;
+    left: auto;
+
+    animation-name: "slide-in-top";
+    animation-duration: .3s;
+    -webkit-animation-name: "slide-in-top";
+    -webkit-animation-duration: .3s;
+}
+#close, #close-feedback, #close-verses {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+#close:hover, #close:focus, #close-feedback:hover, #close-feedback:focus, #close-verses:hover, #close-verses:focus {
+    color: rgb(228, 13, 13);
+    text-decoration: none;
+    cursor: pointer;
+}
+.txt-emphasis-blue{
+    font-weight: bold;
+    color: rgb(49, 74, 119);
+}
+.txt-emphasis-green, .success{
+    font-weight: bold;
+    color: rgb(44, 119, 37);
+}
+.text-error, .error{
+    color: rgb(228, 13, 13);
+    font-weight: bold;
+}
+
+
+/* BASE.HTML OR INDEX.HTML STYLING */
+html{
+    font-size: 14px;
+}
+body, button, input, textarea {
+    font-family: 'Montserrat', sans-serif;
+}
+h1{
+    font-size: 3.5rem;
+    text-align: center;
+}
+
+.ref {
+    font-weight: bold;
+    font-size: 20px;
+    font-family: 'Lato', sans-serif;
+}
+
+footer {
+    font-size: .6rem;
+    width: 66%;
+    margin: auto;
+    color: grey;
+    height: 50px;
+}
+
+.div-main{
+    text-align: center;
+}
+
+section{
+    width: 60%;
+    margin: auto;
+}
+
+.spacer{
+    height: 25px;
+}
+
+hr{
+    width: 95%;
+    color: rgb(204, 204, 204);
+}
+
+#btn-search{
+    margin-left: 0px;
+    height: 50px;
+    box-sizing: content-box;
+    font-size: 1.25rem;
+    background-color: white;
+    border: 1px solid grey;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+#btn-search:hover{
+    border: 1px solid cornflowerblue;
+}
+.btn-add-verse{
+    background-color: white;
+    border: 1px solid grey;
+    height: 40px;
+    width: 100%;
+    font-size: 1.3rem;
+    margin-top: 5px;
+}
+.btn-add-verse:hover{
+    border: 1px solid cornflowerblue;
+}
+/* LINK STYLING */
+a {
+    text-decoration: none;
+    color:rgb(49, 74, 119);
+    font-size: 1.3rem;
+}
+a:hover, #my-verses:hover{
+    color:cornflowerblue;
+    cursor: pointer;
+}
+
+.passage{
+    text-align: left;
+    width: 85%;
+    margin: auto;
+}
+.register-link{
+    font-size: 1rem;
+}
+
+/* NAV BAR STYLING */
+nav{
+    display: flex;
+    justify-content: center;
+}
+.nav-link{
+    margin: 10px;
+    font-weight: 500;
+}
+
+#my-verses{
+    color:rgb(49, 74, 119);
+    font-weight: 500;
+    font-size: 1.3rem;
+}
+
+.page-nav{
+    margin: auto;
+}
+.page-nav-text{
+    font-size: 1.3rem;
+}
+
+/* LOGIN AND SEARCH INPUT STYLING */
+.btns-login-register{
+    box-sizing: content-box;
+    width: 33%;
+    height: 50px;
+    font-size: 1.25rem;
+    padding-left: 5px;
+    padding-right: 1px;
+    background-color: white;
+    border: 1px solid grey;
+    margin: 5px;
+}
+.btns-login-register:hover{
+    border: 1px solid cornflowerblue;
+}
+
+input{
+    width: 33%;
+    height: 50px;
+    font-size: 1.25rem;
+    margin: 5px;
+    padding-left: 5px;
+}
+
+input:focus{
+    border: 1px solid cornflowerblue;
+}
+
+/* ANIMATIONS */
+@keyframes slide-in-left{
+    from {
+        left: -300px;
+        opacity: 0;
+    }
+    to {
+        left: 0;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes slide-in-left{
+    from {
+        left: -300px;
+        opacity: 0;
+    }
+    to {
+        left: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes slide-in-top{
+    from {
+        top: -300px;
+        opacity: 0;
+    }
+    to {
+        top: 0;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes slide-in-top{
+    from {
+        top: -300px;
+        opacity: 0;
+    }
+    to {
+        top: 0;
+        opacity: 1;
+    }
+}
+
+/* RESPONSIVE DESIGN */
+/*
+#btn-search
+#search-field
+section
+input
+.btns-login-register
+h1
+*/
+@media (max-width:1050px){
+    /*modal styling*/
+    #modal-verses-content{
+        position: relative;
+        margin: 15% auto;
+        left: auto;
+        top: auto;
+        width: 80%;
+        height: 125px;
+        overflow: auto;
+    }
+}
+@media (max-width:900px){
+    #textarea-verse{
+        width: 95%;
+    }
+
+    input, .btns-login-register{
+        width: 70%;
+    }
+    .passage{
+        width: 90%;
+    }
+    section{
+        width: 100%;
+    }
+
+}
+@media (max-width:710px){
+    h1{
+        font-size: 2rem;
+    }
+    .verse-to-mem{
+        font-size: 1.5rem;
+    }
+
+}
+@media (max-width:650px){
+    input, .btns-login-register{
+        width: 90%;
+    }
+    #search-field{
+        width: 70%;
+    }
+    section{
+        width: 100%;
+    }
+
+}
+
+@media (max-width:500px){
+    .verse-to-mem{
+        width: 90%;
+        padding: 5px;
+    }
+    .spacer{
+        height: 8px;
+    }
+}
+
+@media (max-width:400px){
+    .btn-verse-controls{
+        width: 125px;
+    }
+    html{
+        font-size: 12px;
+    }
+    #btn-search{
+        width: 70%;
+        padding: 5px;
+    }
+
+    #search-field{
+        padding: 5px;
+    }
+
+    .passage{
+        width: 95%;
+    }
+}
+
