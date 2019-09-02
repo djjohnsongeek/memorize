@@ -2,7 +2,6 @@
 {% block title %} Registration {% endblock %}
 
 {% block body %}
-<div class="div-main">
     <h1>Register</h1>
     {% if messages %}
         {% for message in messages %}
@@ -22,6 +21,4 @@
         Already have an Account?
         <a class="register-link" href="{% url 'login_view' %}"> Login Here</a>
     </span>
-    
-</div>
 {% endblock %}

@@ -11,33 +11,36 @@
         </title>
     </head>
     <body>
-        {% if user.is_authenticated %}
-            <nav>
-                <div class="nav-link">
-                    <a href="{% url 'index' %}">Home</a><br/>
+        <div class="div-main">
+            {% if user.is_authenticated %}
+                <nav>
+                    <div class="nav-link">
+                        <a href="{% url 'index' %}">Home</a><br/>
+                    </div>
+                    <div class="nav-link">
+                        <a href="{% url 'logout_view' %}">Logout</a>
+                    </div>
+                    <div class="nav-link">
+                        <span id="my-verses">My Verses</span>
+                    </div>
+                </nav>
+                <hr/>
+            {% endif %}
+            {% block body %} {% endblock %}
+            <div id="modal-verses">
+                <div id="modal-verses-content">
+                    <span id="close-verses">&times;</span>
+                    {% if verses %}
+                        {% for verse in verses %}
+                            <div class="hidden-verses">
+                                <a href="{% url 'memorize' reference=verse %}">{{ verse }}</a>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
-                <div class="nav-link">
-                    <a href="{% url 'logout_view' %}">Logout</a>
-                </div>
-                <div class="nav-link">
-                    <span id="my-verses">My Verses</span>
-                </div>
-            </nav>
-            <hr/>
-        {% endif %}
-        {% block body %} {% endblock %}
-        <div id="modal-verses">
-            <div id="modal-verses-content">
-                <span id="close-verses">&times;</span>
-                {% if verses %}
-                    {% for verse in verses %}
-                        <div class="hidden-verses">
-                            <a href="{% url 'memorize' reference=verse %}">{{ verse }}</a>
-                        </div>
-                    {% endfor %}
-                {% endif %}
             </div>
         </div>
+        {% if user.is_authenticated %}
         <footer>
             <div class="spacer"></div>
             <div>
@@ -48,6 +51,7 @@
                 </span>
             </div>
         </footer>
+        {% endif %}
     </body>
     <script>
         //add event listener to "Your Verses" nav item

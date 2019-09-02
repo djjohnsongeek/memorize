@@ -2,7 +2,6 @@
 {% block title %} Login {% endblock %}
 
 {% block body %}
-<div class="div-main">
     <h1>Login</h1>
     {% if messages %}
         {% for message in messages %}
@@ -17,5 +16,4 @@
     </form>
     <div class="spacer"></div>
     <span>No account yet? <a class="register-link" href="{% url 'register' %}">Register Here</a></span>
-</div>
 {% endblock %}
