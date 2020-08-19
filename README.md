@@ -1,5 +1,5 @@
 # Memorize
-A Bible Verse Memorization WebApp built with Django and React. Still very much in progress.<br/>
+A Bible Verse Memorization WebApp built with Django and React. Still very much in progress, not currently being updated.<br/>
 Check it out here: https://the-treasured-word.herokuapp.com<br/>
 
 <b>Current Features:</b><br/>
