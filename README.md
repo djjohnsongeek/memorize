@@ -1,6 +1,6 @@
 # Memorize
 A Bible Verse Memorization WebApp built with Django and React. Still very much in progress, not currently being updated.<br/>
-Is no longer deployed to the web due to the fact that Heroku is shutting down their once excellent free tier.
+This web app is no longer deployed to the web due to the fact that Heroku is shutting down their once excellent free tier.
 
 <b>Current Features:</b><br/>
 -Register, login, logout<br/>
